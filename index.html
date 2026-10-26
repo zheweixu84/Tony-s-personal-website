@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Tony Xu — Design Portfolio</title>
+<style>
+:root{--bg:#080d17;--surface:#111d2d;--surface2:#152844;--line:#314761;--blue:#65aaff;--text:#f3f7ff;--muted:#9caec5;--p:0}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}a{color:inherit;text-decoration:none}button{font:inherit}.wrap{width:min(1160px,calc(100% - 72px));margin:auto}
+header{position:fixed;inset:0 0 auto;height:80px;background:#080d17eb;backdrop-filter:blur(20px);z-index:100;border-bottom:1px solid #2b415c}header .wrap{height:100%;display:flex;align-items:center;justify-content:space-between}.identity{display:flex;align-items:center;gap:12px}.logo{display:inline-flex;align-items:center;justify-content:center;width:52px;height:48px;border:1px solid #4475ac70;background:#102038;border-radius:3px;position:relative;transition:box-shadow .25s,border .25s}.logo:hover{border-color:var(--blue);box-shadow:0 0 23px #428df855}.logo svg{width:42px;height:42px}.logo{background:transparent;border:0;width:56px;height:56px}.logo:hover{box-shadow:none;filter:drop-shadow(0 0 9px #65aaffaa)}.logotext{font-size:10px;letter-spacing:.22em;color:#8ea8c8;line-height:1.7}nav{display:flex;gap:35px;align-items:center}nav a{color:#d3e0f3;font-size:12px;letter-spacing:.15em;text-transform:uppercase}nav a:hover{color:var(--blue)}.menu-button{height:39px;width:43px;border:1px solid var(--line);background:#132137;color:white;cursor:pointer;display:grid;place-items:center;transition:.2s}.menu-button:hover,.menu-button[aria-expanded=true]{border-color:var(--blue);background:#1a3b64}.menu-lines,.menu-lines::before,.menu-lines::after{width:17px;height:2px;background:var(--blue);display:block;position:relative;content:""}.menu-lines::before{position:absolute;top:-6px}.menu-lines::after{position:absolute;top:6px;width:11px;right:0}
+.scrim{position:fixed;inset:80px 0 0;background:#01060bd0;z-index:110;opacity:0;pointer-events:none;transition:opacity .25s}.scrim.open{opacity:1;pointer-events:auto}.side-menu{position:fixed;z-index:111;right:0;top:80px;bottom:0;width:min(410px,100%);background:#101e30;border-left:1px solid var(--line);padding:50px 38px;transform:translateX(105%);transition:transform .32s;box-shadow:-24px 0 65px #0005}.side-menu.open{transform:translateX(0)}.side-menu h2{font-size:12px;color:var(--blue);letter-spacing:.22em;margin:0 0 35px}.side-menu a,.side-menu button.menu-link{display:block;width:100%;text-align:left;background:none;border:0;color:var(--text);font-weight:750;font-size:29px;letter-spacing:-.04em;padding:19px 0;border-bottom:1px solid #34465b;cursor:pointer}.side-menu a:hover,.side-menu button:hover{color:var(--blue)}.side-menu .minor{font-size:14px;font-weight:500;letter-spacing:0}.side-menu .menu-note{color:var(--muted);font-size:12px;line-height:1.7;margin-top:35px}
+
+/* V7 — one continuous full-screen identity; scale/flip first, split only on the back */
+.hero-scroll{height:350vh;position:relative}
+.hero-sticky{position:sticky;top:80px;height:calc(100svh - 80px);min-height:550px;display:grid;place-items:center;overflow:hidden;background:#07101f}
+.gridlines{position:absolute;inset:0;background-image:linear-gradient(#5e91c80d 1px,transparent 1px),linear-gradient(90deg,#5e91c80d 1px,transparent 1px);background-size:70px 70px;pointer-events:none}
+.hero-ambient{position:absolute;inset:0;background:radial-gradient(ellipse at 45% 40%,#1a376557,transparent 67%);pointer-events:none}
+.hero-v6-top{position:absolute;top:23px;left:5vw;right:5vw;z-index:4;display:flex;justify-content:space-between;pointer-events:none;color:#9fc4ed;font-size:10px;font-weight:750;letter-spacing:.21em}
+.hero-v6-top .count{color:#70b9ff}
+.hero-stage{--flip:0;--split:0;--shrink:0;position:absolute;inset:0;width:100%;height:100%;perspective:2200px;z-index:2;pointer-events:none}
+.hero-flipper{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(calc(-180deg * var(--flip))) scale(calc(1 - .24 * var(--shrink)));will-change:transform;}
+.hero-front-v7,.process-panel-v7{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.hero-front-v7{inset:0;background:radial-gradient(circle at 72% 43%,#15355a 0%,#0b1b32 36%,#07101e 80%);border:1px solid #35577845;transform:translateZ(13px);display:flex;flex-direction:column;padding:clamp(32px,5.2vw,86px) clamp(30px,6vw,110px) clamp(27px,4.2vw,68px)}
+.front-grid-ambient{position:absolute;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(#77a5db19 1px,transparent 1px),linear-gradient(90deg,#77a5db19 1px,transparent 1px);background-size:65px 65px;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 87%,transparent)}
+.front-scanline{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(110deg,transparent 36%,#3387d60b 51%,transparent 70%)}
+.front-topline{display:flex;align-items:center;justify-content:space-between;gap:15px;font-size:clamp(9px,.85vw,12px);letter-spacing:.20em;font-weight:750;color:#99b8dc}
+.front-topline span:last-child{color:#69a5e5}
+.front-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);flex:1;min-height:0;align-items:center;gap:2.5vw}
+.front-maincopy{min-width:0;position:relative;z-index:1}
+.front-micro{display:flex;gap:9px;align-items:center;font-size:clamp(9px,.9vw,12px);color:#6bb5ff;letter-spacing:.16em;font-weight:750;margin-bottom:2.2vw}
+.front-micro-dot{width:7px;height:7px;border-radius:50%;background:#70b7ff;box-shadow:0 0 17px #419bfb9c}
+.hero-person-name{font-size:clamp(84px,14vw,230px);line-height:.77;letter-spacing:-.095em;font-weight:900;margin:0;color:#f1f6ff;white-space:nowrap}
+.hero-person-name>span{display:block}.hero-person-name .xu-name{color:#6cb0ff;margin-left:-.014em}.name-period{color:#f4f8ff}
+.front-horizontal-rule{margin:2.8vw 0 1.5vw;width:min(460px,90%);height:1px;background:linear-gradient(90deg,#68b3ff,#4375a25c,transparent)}
+.front-traits{display:flex;flex-wrap:wrap;max-width:510px;gap:10px 19px;font-size:clamp(9px,.92vw,13px);font-weight:700;letter-spacing:.09em;color:#c4d7ef;line-height:1.65}
+.front-traits span:not(:last-child):after{content:'+';padding-left:19px;color:#64acff}
+.front-artwork{position:relative;min-width:0;max-height:65vh;width:100%;aspect-ratio:1/1.06;display:grid;place-items:center}
+.front-artwork svg{width:100%;height:100%;filter:drop-shadow(0 0 38px #307bea37)}
+.model-coordinates{position:absolute;right:0;bottom:8%;left:5%;display:flex;justify-content:space-between;font-size:10px;letter-spacing:.17em;color:#81b1e7}
+.front-bottomline{display:flex;gap:15px;align-items:flex-end;justify-content:space-between;border-top:1px solid #416a9966;padding-top:19px;font-size:clamp(15px,2.6vw,34px);font-weight:800;letter-spacing:-.045em;color:#f3f7ff}
+.front-bottomline strong{color:#6ab0ff}.front-bottomline span:last-child{color:#a6c4e8;letter-spacing:.10em;white-space:nowrap;font-size:clamp(8px,.8vw,12px);font-weight:700}
+.process-panel-v7{width:33.333333%;height:100%;top:0;transform:rotateY(180deg) translate3d(calc(var(--split) * var(--sx,0px)),calc(var(--split) * var(--sy,0px)),13px) rotateZ(calc(var(--split) * var(--rot,0deg)));background:linear-gradient(150deg,#193357,#0d1c32 58%,#081728);border:1px solid #5a8cbe9b;box-shadow:inset 0 0 70px #070f20ad;pointer-events:auto;transform-style:preserve-3d;overflow:hidden}
+/* Back elements use reversed world positions because the parent rotates around Y. */
+.process-panel-1{left:66.666667%;--sx:-54px;--sy:-7px;--rot:-2deg}
+.process-panel-2{left:33.333333%;--sx:0px;--sy:10px;--rot:1deg;background:linear-gradient(150deg,#1e4474,#102442 55%,#0b1a30)}
+.process-panel-3{left:0;--sx:54px;--sy:-6px;--rot:2deg}
+.process-panel-v7:after{content:"";position:absolute;bottom:0;left:0;right:0;height:5px;pointer-events:none;background-color:#116fd1;background-image:radial-gradient(circle at 20% 40%,#041b37 0 1.5px,transparent 2px),radial-gradient(circle at 60% 60%,#031c37 0 1.6px,transparent 2.5px);background-size:17px 9px,23px 12px;opacity:calc(.2 + .8 * var(--split))}
+.process-panel-v7:before{content:'';position:absolute;inset:0;background-image:linear-gradient(#78b1e41a 1px,transparent 1px),linear-gradient(90deg,#78b1e41a 1px,transparent 1px);background-size:34px 34px;opacity:.52;pointer-events:none}
+.process-inner{height:100%;position:relative;padding:clamp(22px,3.2vw,53px) clamp(17px,2.7vw,42px);display:flex;flex-direction:column;align-items:stretch}
+.process-top,.process-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#9cbfe8;letter-spacing:.13em;font-size:clamp(9px,.87vw,12px);font-weight:700}
+.process-top{border-bottom:1px solid #7aabdb53;padding-bottom:19px}
+.process-bottom{margin-top:auto;border-top:1px solid #7aabdb53;padding-top:19px;color:#b2d4f2}
+.process-bottom span:last-child{font-size:clamp(7px,.72vw,10px);color:#78a8dc}
+.process-name{display:flex;flex-direction:column;gap:5px;margin-top:clamp(20px,3vw,46px)}
+.process-number{font-size:clamp(25px,3vw,48px);font-weight:900;letter-spacing:-.03em;color:#66b2ff}
+.process-name h2{font-size:clamp(30px,4.4vw,68px);font-weight:900;letter-spacing:-.075em;line-height:1;margin:0;color:#f6f9ff}
+.process-panel-v7 .back-icon{width:92%;height:41%;max-height:43%;display:block;align-self:center;flex:1;margin:20px auto;overflow:visible;color:#86c2ff;opacity:.9}
+.process-panel-v7 .back-icon path,.process-panel-v7 .back-icon line,.process-panel-v7 .back-icon circle{vector-effect:non-scaling-stroke}
+.process-panel-v7:nth-child(2):hover,.process-panel-v7:nth-child(3):hover,.process-panel-v7:nth-child(4):hover{border-color:#87c3ff}
+/* Open-cell blue foam is visible at the edge of the 3D object during the flip. */
+.hero-edge-v7{opacity:calc(1 - var(--split));position:absolute;background-color:#1178dd;background-image:radial-gradient(ellipse at 14% 30%,#01192e 0 2px,transparent 3.2px),radial-gradient(ellipse at 63% 62%,#001733 0 2.5px,transparent 4px),radial-gradient(ellipse at 43% 94%,#001932 0 1.7px,transparent 3px),linear-gradient(100deg,#0b5aba,#278bfa 47%,#075ab4);background-size:24px 20px,32px 28px,20px 18px,100% 100%;box-shadow:inset 0 0 10px #001732d4;pointer-events:none}
+.hero-edge-v7.edge-top{top:-13px;left:0;right:0;height:26px;transform:rotateX(90deg)}
+.hero-edge-v7.edge-bottom{bottom:-13px;left:0;right:0;height:26px;transform:rotateX(90deg)}
+.hero-edge-v7.edge-left{left:-13px;top:0;bottom:0;width:26px;transform:rotateY(90deg)}
+.hero-edge-v7.edge-right{right:-13px;top:0;bottom:0;width:26px;transform:rotateY(90deg)}
+.hero-meta{opacity:var(--heroMetaOpacity,0);position:absolute;bottom:59px;left:5vw;right:5vw;display:flex;justify-content:space-between;gap:10px;font-size:10px;letter-spacing:.16em;color:#91b3d5;z-index:4;pointer-events:none}
+.hero-status{color:#6cadff;font-weight:800}
+.hero-progress{position:absolute;bottom:25px;left:5vw;display:flex;gap:7px;z-index:4}
+.hero-progress i{width:32px;height:3px;background:#385476;display:block;transition:background .2s}.hero-progress i.active{background:#6ab0ff;box-shadow:0 0 10px #3d91ff7d}
+.scroll-cue{position:absolute;bottom:24px;right:5vw;font-size:10px;letter-spacing:.16em;color:#a3bee0;z-index:4}
+@media(max-width:900px){.hero-sticky{top:66px;height:calc(100svh - 66px);min-height:480px}.hero-front-v7{padding:38px 5vw 34px}.hero-person-name{font-size:clamp(82px,16vw,145px)}.front-artwork{max-height:58vh}.front-bottomline{font-size:clamp(17px,3vw,26px)}.front-traits{font-size:9px}.process-name h2{font-size:clamp(20px,4vw,41px)}.process-inner{padding:17px}.process-top,.process-bottom{font-size:9px}.process-panel-v7 .back-icon{height:35%}.hero-v6-top{font-size:8px;left:3vw;right:3vw}}
+@media(max-width:600px){.hero-scroll{height:320vh}.hero-front-v7{padding:30px 25px 31px}.front-layout{grid-template-columns:1fr;gap:0}.hero-person-name{font-size:clamp(90px,22vw,139px)}.front-maincopy{align-self:center}.front-artwork{position:absolute;top:22%;right:-22%;width:80%;height:55%;opacity:.24;z-index:-1}.front-traits{font-size:10px;max-width:290px}.front-traits span:not(:last-child):after{display:none}.front-traits{display:flex;flex-direction:column;gap:1px}.front-bottomline{font-size:20px;display:flex;flex-direction:column;align-items:flex-start}.front-bottomline span:last-child{font-size:8px}.front-topline span:last-child{display:none}.hero-flipper{transform:rotateY(calc(-180deg * var(--flip))) scale(calc(1 - .13 * var(--shrink)))}.process-panel-1{--sx:-10px}.process-panel-3{--sx:10px}.process-inner{padding:15px 7px}.process-top{font-size:6px;letter-spacing:0;padding-bottom:6px}.process-top span:last-child{display:none}.process-name{margin-top:20px}.process-number{font-size:18px}.process-name h2{font-size:clamp(14px,4.2vw,22px);letter-spacing:-.065em}.process-bottom{font-size:7px;letter-spacing:0;padding-top:9px}.process-bottom span:last-child{display:none}.process-panel-v7 .back-icon{width:100%;height:29%;max-height:33%}.hero-meta>span:first-child{display:none}.hero-meta{bottom:56px;font-size:8px}.hero-v6-top span:first-child{font-size:8px}.hero-v6-top{top:16px}.scroll-cue{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.hero-flipper{will-change:auto}}
+section.content{padding:106px 0;scroll-margin-top:85px}.section-label{font-size:12px;color:var(--blue);letter-spacing:.25em;text-transform:uppercase}.section-heading{font-size:clamp(40px,6.3vw,75px);line-height:1.05;letter-spacing:-.065em;margin:20px 0 32px}.dot{color:var(--blue)}.about-grid{display:grid;grid-template-columns:37% 1fr;gap:65px;align-items:center}.photo-placeholder{min-height:420px;border:1px solid var(--line);background:linear-gradient(135deg,#20456c,#132038 55%,#101b30);display:grid;place-items:center;color:var(--muted);letter-spacing:.15em;font-size:12px}.about-text{color:#cad6e7;font-size:16px;line-height:1.75;max-width:700px}.about-text p{margin:0 0 14px}.about-text strong{color:#e8f2ff}.about-actions{display:flex;flex-wrap:wrap;gap:24px;margin-top:22px}.text-link{display:inline-block;color:var(--blue);border-bottom:1px solid var(--blue);padding-bottom:6px;font-size:14px}.text-link:hover{color:white}.section-headline{display:flex;align-items:end;justify-content:space-between;gap:30px}.section-subtitle{font-size:13px;color:var(--muted);max-width:300px;text-align:right;line-height:1.6}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:10px}.featured-card{background:var(--surface);border:1px solid var(--line);min-width:0;transition:border-color .2s,transform .2s}.featured-card:hover{border-color:#70acff;transform:translateY(-4px)}.featured-image{height:260px;background:linear-gradient(135deg,#284871,#101c30);display:grid;place-items:center;color:#a1b9d7;font-size:12px;letter-spacing:.12em;text-transform:uppercase}.featured-card:nth-child(2) .featured-image{background:linear-gradient(135deg,#172843,#305581)}.featured-card:nth-child(3) .featured-image{background:linear-gradient(135deg,#294267,#111b2d)}.featured-card:nth-child(4) .featured-image{background:linear-gradient(135deg,#182a44,#274975)}.featured-info{padding:24px}.featured-info small,.archive-meta{color:var(--blue);font-size:11px;letter-spacing:.12em;line-height:1.7}.featured-info h3{font-size:25px;letter-spacing:-.04em;margin:10px 0}.featured-info p{color:var(--muted);line-height:1.65;font-size:13px;min-height:45px}.more{display:flex;justify-content:flex-end;margin-top:30px}.more button{background:none;border:0;color:var(--blue);font-size:17px;cursor:pointer}.more button:hover{color:white}
+.skills-groups{display:grid;grid-template-columns:1fr 1fr;gap:48px}.skill-group h3{font-size:12px;font-weight:600;letter-spacing:.2em;color:#7fabd7;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:18px}.skills-cloud{display:flex;flex-wrap:wrap;gap:9px}.skill{position:relative;z-index:1;display:inline-block;cursor:default;padding:12px 16px;border:1px solid #2c4361;background:#111f34;color:#cbd9ed;font-size:15px;transform-origin:center;transition:transform .2s ease,color .2s,border-color .2s,box-shadow .2s;will-change:transform}.skill:hover,.skill:focus-visible{transform:scale(1.17);z-index:4;color:white;border-color:#6eaeff;background:#23436a;box-shadow:0 6px 24px #327dda3d;outline:none}.skill::after{content:"";position:absolute;bottom:-1px;left:12px;right:12px;height:2px;background:var(--blue);transform:scaleX(0);transition:transform .2s}.skill:hover::after,.skill:focus-visible::after{transform:scaleX(1)}
+.contact{border-top:1px solid var(--line);background:#0d1929;padding:80px 0 55px;scroll-margin-top:80px}.contact p{font-size:16px;line-height:1.8;color:var(--muted)}.footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px;margin-top:62px;color:#8da3c0;font-size:11px;letter-spacing:.09em}
+#archiveView{display:none;min-height:100vh;padding:145px 0 100px}body.archive-active #homeView{display:none}body.archive-active #archiveView{display:block}.archive-head{display:flex;justify-content:space-between;align-items:end;gap:40px}.archive-back{color:var(--blue);font-size:13px}.filter-row{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 35px}.filter{background:transparent;color:#d5e2f3;border:1px solid var(--line);padding:12px 18px;cursor:pointer;font-size:13px}.filter.active,.filter:hover{background:#2b5b91;border-color:#75b3ff;color:white}.archive-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.archive-grid .featured-image{height:230px}.archive-grid .featured-card{margin:0}.archive-grid .featured-info p{min-height:0}.hidden-card{display:none!important}.archive-note{color:var(--muted);font-size:12px;margin-top:30px;line-height:1.7}
+@media(max-width:780px){.wrap{width:calc(100% - 36px)}header{height:66px}.logotext{display:none}nav{gap:17px}nav a{font-size:10px}nav a:nth-child(2){display:none}.scrim{top:66px}.side-menu{top:66px}.hero-sticky{top:66px;height:calc(100vh - 66px)}.tile{height:175px}.name-frame p{font-size:9px}.about-grid,.skills-groups,.feature-grid,.archive-grid{grid-template-columns:1fr}.about-grid{gap:25px}.photo-placeholder{min-height:300px}.featured-image,.archive-grid .featured-image{height:235px}.section-headline,.archive-head{align-items:start;flex-direction:column}.section-subtitle{text-align:left}section.content{padding:75px 0}#archiveView{padding-top:115px}.skill:hover{transform:scale(1.07)}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition-duration:.01ms!important}}
+
+/* V3: Dedicated page routing and geometric identity */
+#contactView{display:none;min-height:100vh;padding:165px 0 52px;background:radial-gradient(circle at 80% 25%,#163258 0,transparent 42%),#080d17}
+body.contact-active #homeView,body.contact-active #archiveView{display:none}
+body.contact-active #contactView{display:block}
+.contact-page-wrap{min-height:calc(100vh - 220px);display:flex;flex-direction:column}
+.contact-hero{padding:45px 0 55px;flex:1}.contact-index,.contact-label{font-size:11px;letter-spacing:.2em;color:#8eb4e1}
+.contact-hero h1{font-size:clamp(60px,10vw,145px);line-height:.95;letter-spacing:-.085em;margin:35px 0;max-width:1100px}
+.contact-hero h1 em{font-style:normal;color:var(--blue)}.contact-intro{font-size:clamp(17px,2vw,24px);color:#bdcfe3;max-width:690px;line-height:1.6}
+.contact-email{display:inline-flex;gap:28px;align-items:center;border-bottom:2px solid var(--blue);padding:20px 0 12px;color:#f1f7ff;font-size:clamp(18px,3vw,34px);margin-top:25px;transition:color .2s,transform .2s}
+.contact-email:hover{color:var(--blue);transform:translateX(6px)}.contact-email span{color:var(--blue)}
+.contact-bottom{border-top:1px solid var(--line);padding:29px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:26px}.contact-bottom>div{display:flex;flex-direction:column;gap:11px}.contact-bottom strong,.contact-bottom a{font-size:14px;font-weight:500;color:#ebf3ff}.contact-bottom a:hover{color:var(--blue)}
+@media(max-width:780px){#contactView{padding:113px 0 40px}.contact-hero{padding-top:35px}.contact-hero h1{font-size:clamp(47px,11vw,80px)}.contact-bottom{grid-template-columns:1fr;gap:20px}}
+
+/* V4: spacing, richer skills and biography + contact */
+#selected.content{padding-bottom:45px}#skills.content{padding-top:45px;padding-bottom:85px}
+.skills-groups{row-gap:32px;column-gap:45px}.skills-cloud{gap:10px}
+#contactView{padding:122px 0 38px;background:radial-gradient(circle at 88% 12%,#172d4b 0,transparent 40%),var(--bg)}
+.about-page{min-height:calc(100vh - 160px)}.about-page-header{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:55px;align-items:center;padding:32px 0 55px;border-bottom:1px solid var(--line)}
+.micro,.story-no{font-size:11px;color:#7dabdf;letter-spacing:.2em;font-weight:600}.about-page-header h1{font-size:clamp(54px,7.5vw,116px);line-height:.98;letter-spacing:-.078em;margin:20px 0 25px}.about-page-header h1 em,.reach-card h2 em{font-style:normal;color:var(--blue)}
+.page-lead{color:#c5d3e6;font-size:clamp(16px,1.5vw,21px);line-height:1.7;max-width:770px;margin:0}
+.mini-photo{aspect-ratio:4/5;border:1px solid var(--line);background:linear-gradient(145deg,#254873,#101a2a);display:grid;place-items:center;color:#a8bbd5;font-size:11px;letter-spacing:.12em}
+.about-page-columns{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.82fr);gap:clamp(28px,6vw,92px);align-items:start;padding-top:42px}
+.story{padding:14px 0 27px;border-bottom:1px solid #253850}.story + .story{padding-top:30px}.story h2{font-size:clamp(26px,2.8vw,43px);letter-spacing:-.05em;margin:14px 0 15px}.story p{font-size:15px;line-height:1.85;color:#c2d0e3;max-width:720px;margin:0 0 12px}.about-page-signoff{margin:35px 0;font-size:20px;letter-spacing:.15em;font-weight:700}.about-page-signoff span{color:var(--blue)}
+.reach-card{position:sticky;top:112px;background:#14233a;border:1px solid #3b5676;padding:30px;box-shadow:0 15px 60px #0003}.reach-card h2{font-size:clamp(35px,4vw,62px);line-height:1;letter-spacing:-.065em;margin:22px 0}.reach-card p{font-size:14px;line-height:1.7;color:#afc2d9}.reach-detail{border-top:1px solid #3a4f6c;padding:21px 0}.reach-detail>span{display:block;color:#85b6ed;font-size:10px;letter-spacing:.19em;margin-bottom:12px}.reach-detail strong{font-size:14px;font-weight:500;line-height:1.6}.reach-detail .address{display:block;font-size:clamp(14px,1.45vw,20px);overflow-wrap:anywhere;border-bottom:0;color:#f3f7ff}.reach-detail .address:hover{color:var(--blue)}
+.contact-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}.contact-button{border:1px solid #608ac0;background:transparent;padding:12px 13px;color:#edf5ff;font:600 10px Arial,sans-serif;letter-spacing:.08em;cursor:pointer}.contact-button.primary{background:var(--blue);color:#091522;border-color:var(--blue)}.contact-button:hover{filter:brightness(1.2)}.copy-status{min-height:1.4em;margin:10px 0 0!important;font-size:12px!important}.back-home{display:inline-block;margin-top:12px;color:var(--blue);font-size:12px;letter-spacing:.1em}
+@media(max-width:850px){.about-page-header{grid-template-columns:1fr 140px;gap:18px}.about-page-columns{grid-template-columns:1fr}.reach-card{position:static}.about-page-header h1{font-size:clamp(42px,9vw,75px)}#contactView{padding-top:95px}}
+@media(max-width:520px){.about-page-header{grid-template-columns:1fr}.mini-photo{width:150px}.about-page-header{padding-bottom:35px}.about-page-columns{padding-top:15px}.reach-card{padding:21px}}
+
+/* V9 — real portrait + a more complete, personal About & Contact */
+.portrait-frame{position:relative;min-height:510px;overflow:hidden;border:1px solid #3a5980;
+ background:#14253b;isolation:isolate;box-shadow:inset 0 0 0 1px #7cb5ec22}
+.portrait-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+ object-position:50% 16%;filter:saturate(.85) contrast(1.02)}
+.portrait-frame::after{content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(180deg,transparent 52%,#0b1932b5 89%,#0b1932 100%)}
+.portrait-label{position:absolute;z-index:2;bottom:21px;left:22px;right:22px;display:flex;justify-content:space-between;
+ gap:8px;color:#e7f3ff;font-size:10px;font-weight:700;letter-spacing:.17em;text-shadow:0 2px 6px #051121}
+.portrait-corner{position:absolute;z-index:3;right:13px;top:13px;width:29px;height:29px;border-top:2px solid #4f9eff;
+ border-right:2px solid #4f9eff}
+.about-page-header{grid-template-columns:minmax(0,1fr) minmax(210px,275px);gap:clamp(25px,5vw,70px)}
+.mini-photo{width:100%;aspect-ratio:4/5;min-height:0;position:relative;overflow:hidden;
+ border:1px solid #5076a1;display:block;background:#14233a}
+.mini-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 17%;display:block;
+ filter:saturate(.83) contrast(1.03)}
+.mini-photo::after{content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(180deg,transparent 58%,#0a182bd9 100%)}
+.mini-photo .portrait-label{font-size:9px;left:14px;right:14px;bottom:13px}
+.about-highlights{display:flex;flex-wrap:wrap;gap:9px;margin-top:23px}
+.about-highlights span{padding:10px 12px;border:1px solid #3b5474;background:#112138b5;
+ color:#afcce9;font-size:10px;letter-spacing:.095em;font-weight:700}
+.story-insights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:27px 0 7px}
+.story-insight{padding:18px 14px;background:#112039;border:1px solid #314968;min-height:108px}
+.story-insight b{display:block;color:#68adff;font-size:12px;letter-spacing:.1em;margin-bottom:11px}
+.story-insight span{color:#c8d9ed;font-size:12px;line-height:1.55}
+.about-page .stories .story:last-of-type{border-bottom:1px solid #253850}
+@media(max-width:850px){.about-page-header{grid-template-columns:minmax(0,1fr) 190px}.portrait-frame{min-height:450px}}
+@media(max-width:520px){.about-page-header{grid-template-columns:1fr}.mini-photo{width:min(280px,100%)}
+ .portrait-frame{min-height:420px}.story-insights{grid-template-columns:1fr}.story-insight{min-height:0}}
+
+/* V10 — a more personal About page: actual hands-on and photography moments */
+.story-figure{position:relative;margin:25px 0 4px;background:#13233a;border:1px solid #34557b;overflow:hidden}
+.story-figure img{display:block;width:100%;height:295px;object-fit:cover;object-position:center 52%;filter:saturate(.91) contrast(1.04);transition:transform .55s ease}
+.story-figure:hover img{transform:scale(1.025)}
+.story-figure:nth-of-type(1) figcaption{color:#bed3ec}
+.story-figure figcaption{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 17px;color:#bed3ec;font-size:11px;line-height:1.6}
+.story-figure figcaption span{font-weight:700;letter-spacing:.15em;color:#69b2ff}
+.story:nth-child(2) .story-figure img{object-position:center 57%}
+.story:nth-child(3) .story-figure img{object-position:center 48%}
+.life-gallery{padding:72px 0 70px;border-top:1px solid #29425f;margin-top:32px}
+.life-gallery-header{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(220px,.65fr);align-items:end;gap:42px;margin-bottom:31px}
+.life-gallery-header h2{font-size:clamp(34px,4.9vw,70px);line-height:1.05;letter-spacing:-.065em;margin:14px 0 0}
+.life-gallery-header h2 span{color:#65aaff}
+.life-gallery-header p{font-size:14px;line-height:1.8;color:#aec3da;max-width:340px;margin:0 0 5px}
+.life-gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.life-photo{background:#152740;border:1px solid #335072;margin:0;overflow:hidden;position:relative;min-width:0}
+.life-photo:first-child{grid-column:span 2}
+.life-photo img{display:block;width:100%;height:300px;object-fit:cover;object-position:center 48%;filter:saturate(.86) contrast(1.02);transition:transform .6s ease,filter .6s ease}
+.life-photo:first-child img{object-position:center 38%}
+.life-photo:nth-child(2) img{object-position:center 52%}
+.life-photo:nth-child(3) img{object-position:center 44%}
+.life-photo:nth-child(4) img{object-position:center 42%}
+.life-photo:nth-child(5) img{object-position:center 38%}
+.life-photo:hover img{transform:scale(1.04);filter:saturate(1.05) contrast(1.04)}
+.life-photo figcaption{position:absolute;bottom:0;left:0;right:0;padding:40px 16px 14px;background:linear-gradient(transparent,rgba(6,15,29,.88));color:#e9f2ff;font-size:13px;display:flex;align-items:end;justify-content:space-between;gap:10px}
+.life-photo figcaption span{font-size:10px;color:#9bc8f5;font-weight:750;letter-spacing:.11em}
+@media(max-width:850px){.life-gallery-header{grid-template-columns:1fr;gap:14px}.life-gallery-header p{max-width:650px}.story-figure img{height:290px}}
+@media(max-width:650px){.life-gallery{padding:52px 0 44px}.life-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.life-photo:first-child{grid-column:span 2}.life-photo img{height:230px}.life-photo:first-child img{height:265px}.life-photo figcaption{font-size:11px;padding:35px 11px 10px;display:block}.life-photo figcaption span{display:block;margin-bottom:3px}.story-figure img{height:245px}.story-figure figcaption{display:block;padding:11px 13px}.story-figure figcaption span{display:block;margin-bottom:3px}}
+@media(prefers-reduced-motion:reduce){.life-photo img,.story-figure img{transition:none}.life-photo:hover img,.story-figure:hover img{transform:none}}
+
+
+/* Updated identity: original symbol, no vertical blue element, title only. */
+header .identity{display:flex;align-items:center;gap:0;min-width:0}
+header .identity .logo.tony-wordmark{width:238px;height:66px;min-width:0;padding:0;border:0;box-shadow:none;background:none;display:inline-flex;align-items:center;justify-content:flex-start}
+header .identity .logo.tony-wordmark img{width:100%;height:auto;max-height:62px;object-fit:contain;display:block}
+header .identity .logo.tony-wordmark:hover{filter:drop-shadow(0 0 7px #69aeff6b)}
+@media(max-width:700px){header .identity .logo.tony-wordmark{width:172px;height:54px}header .identity .logo.tony-wordmark img{max-height:50px}}
+@media(max-width:420px){header .identity .logo.tony-wordmark{width:145px;height:46px}header .identity .logo.tony-wordmark img{max-height:44px}}
+</style>
+<style id="project-v11-styles">
+/* V11 — Selected work and fully independent detail screens */
+#projectView{display:none;min-height:100vh;padding:116px 0 100px;background:var(--bg)}
+body.project-active #homeView,body.project-active #contactView,body.project-active #archiveView{display:none !important}
+body.project-active #projectView{display:block}
+body.project-active #projectView a:focus-visible, .project-card:focus-visible{outline:2px solid var(--blue);outline-offset:5px}
+.project-card{cursor:pointer;display:block;outline-offset:3px;color:inherit;text-decoration:none}
+.project-card .featured-image{overflow:hidden;position:relative;display:block;background:#0e1725}
+.project-card .featured-image img{height:100%;width:100%;object-fit:cover;display:block;transition:transform .55s cubic-bezier(.2,.7,.3,1),filter .4s ease;filter:saturate(.91)}
+.project-card:hover .featured-image img{transform:scale(1.045);filter:saturate(1.08)}
+.project-card .featured-info{position:relative}
+.project-card .featured-info::after{content:'↗';position:absolute;right:24px;top:32px;font-size:22px;color:var(--blue);transition:transform .2s}
+.project-card:hover .featured-info::after{transform:translate(3px,-3px)}
+.project-card .featured-info h3{padding-right:26px}
+.project-card .featured-info p{margin-bottom:0}
+.project-card .featured-image:not(:has(img)){display:grid;place-items:center;color:#75a9d8;font-size:12px;letter-spacing:.18em}
+.project-card .featured-image .frame-count{position:absolute;left:18px;bottom:14px;background:#07101acc;padding:7px 10px;font-size:10px;color:white;letter-spacing:.2em}
+.archive-grid .featured-card{border:1px solid var(--line)}
+#projectView .project-topnav{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:23px;border-bottom:1px solid #2c4665}
+.project-link{cursor:pointer;background:none;border:0;color:var(--blue);font-size:12px;letter-spacing:.12em;font-weight:700;text-transform:uppercase;padding:10px 0;transition:color .2s}
+.project-link:hover{color:#d4ebff}
+.project-index{color:#7197c4;font-size:11px;letter-spacing:.2em}
+.project-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.96fr);gap:46px;align-items:center;padding:70px 0 70px;min-height:540px}
+.project-eyebrow{font-size:11px;letter-spacing:.19em;line-height:1.8;color:var(--blue);font-weight:700;text-transform:uppercase}
+.project-big-title{font-weight:850;font-size:clamp(54px,6vw,93px);line-height:.96;letter-spacing:-.065em;margin:28px 0 22px;overflow-wrap:anywhere}
+.project-headline{font-size:clamp(20px,2.2vw,30px);line-height:1.33;font-weight:450;color:#c9d7e8;max-width:600px}
+.project-teaser{font-size:16px;color:#95aac5;line-height:1.8;margin-top:26px;max-width:540px}
+.project-hero-visual{height:clamp(330px,43vw,570px);position:relative;overflow:hidden;border:1px solid #354d67;background:#122036;box-shadow:25px 28px 0 #0b1422}
+.project-hero-visual img{width:100%;height:100%;object-fit:cover;display:block}
+.project-hero-visual:after{content:'TONY XU / SELECTED WORK';position:absolute;right:0;bottom:0;color:#d5e8f9;background:#0a1827df;padding:10px 15px;font-size:9px;letter-spacing:.15em}
+.project-hero-visual.portrait img{object-fit:contain;background:#132134}
+.project-metadata{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:21px 0;gap:18px;margin:0 0 85px}
+.project-metadata dt{color:var(--blue);text-transform:uppercase;font-size:10px;letter-spacing:.19em;font-weight:700;margin:0 0 10px}
+.project-metadata dd{margin:0;color:#d9e4f2;font-size:13px;line-height:1.6}
+.project-section{padding:70px 0;border-top:1px solid #2d4059}
+.project-section-label{color:var(--blue);letter-spacing:.2em;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:20px}
+.project-section h2{font-size:clamp(37px,5vw,65px);line-height:1.06;letter-spacing:-.045em;margin:0 0 28px}
+.project-intro-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:10vw}
+.project-prose{font-size:19px;line-height:1.85;color:#c1cfdf;margin:0;max-width:790px}
+.project-aside{border-left:2px solid #3d7cbe;padding-left:28px}
+.project-aside small{color:#78adf0;font-size:10px;letter-spacing:.17em;font-weight:700}
+.project-aside p{font-size:14px;line-height:1.7;color:#b2c3d9}
+.project-question{font-size:clamp(32px,4.9vw,70px);font-weight:700;line-height:1.14;letter-spacing:-.04em;max-width:1050px;margin:18px 0 8px}
+.project-question .accent-mark{color:var(--blue)}
+.project-step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:19px;margin-top:36px}
+.project-step{border:1px solid var(--line);background:linear-gradient(145deg,#172a45,#0c1727);padding:28px;min-height:260px}
+.project-step small{color:#70adf9;font-weight:700;font-size:11px;letter-spacing:.18em}
+.project-step h3{font-size:23px;letter-spacing:-.02em;margin:32px 0 16px;line-height:1.2}
+.project-step p{font-size:13px;line-height:1.8;color:#afc1d8;margin:0}
+.project-gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:27px;margin:30px 0}
+.project-media{margin:0;min-width:0}
+.project-media.span-wide{grid-column:1/-1}
+.project-media figure{margin:0}
+.project-photo-shell{background:#142234;min-height:200px;height:clamp(260px,33vw,450px);border:1px solid #293f59;overflow:hidden}
+.project-media.span-wide .project-photo-shell{height:clamp(350px,49vw,660px)}
+.project-media img{width:100%;height:100%;display:block;object-fit:cover}
+.project-media[data-asset='echo_poster'] img,.project-media[data-asset='echo_cards'] img,.project-media[data-asset='echo_interaction'] img,.project-media[data-asset='echo_site'] img,.project-media[data-asset='fmm_brand'] img,.project-media[data-asset='fmm_early'] img,.project-media[data-asset='fmm_screens'] img,.project-media[data-asset='move_sketch'] img{object-fit:contain;background:#162338}
+.project-media[data-asset='fmm_poster'] img{object-fit:contain;background:#112234}
+.project-media figcaption{margin:12px 1px 2px;font-size:11px;color:#90abc8;line-height:1.5;letter-spacing:.06em}
+.project-conclusion{display:grid;grid-template-columns:1fr 1fr;gap:65px}
+.project-conclusion h3{color:#f5f8ff;font-size:31px;letter-spacing:-.04em;margin:0 0 20px}
+.project-conclusion p{color:#bacbdd;line-height:1.85;font-size:16px}
+.project-footer{display:flex;justify-content:space-between;align-items:center;gap:30px;padding:42px 0 20px;border-top:1px solid var(--line);margin-top:20px}
+.project-footer .project-link{font-size:14px}
+.project-live{display:inline-flex;align-items:center;gap:15px;margin-top:30px;border:1px solid #508ac0;padding:16px 19px;color:#bfe0ff;letter-spacing:.13em;font-size:11px;font-weight:700}
+.project-live:hover{background:#183557}
+.project-focus{position:relative}
+.project-focus:before{content:'';position:absolute;left:-32px;top:12%;width:3px;height:68%;background:linear-gradient(transparent,var(--blue),transparent)}
+#projectView[data-theme='sage']{--blue:#91c2b1}
+#projectView[data-theme='warm']{--blue:#ddb99c}
+#projectView[data-theme='amber']{--blue:#ffbd7b}
+#projectView[data-theme='forest']{--blue:#a9c2a6}
+.project-gallery.theme-sage .project-media{background:#13292a}
+.project-summary-view{min-height:50vh}
+@media(max-width:900px){.project-hero{gap:28px}.project-hero-visual{height:440px}.project-metadata{grid-template-columns:1fr 1fr}.project-step-grid{grid-template-columns:1fr}.project-step{min-height:unset}.project-intro-grid{gap:30px}}
+@media(max-width:650px){#projectView{padding-top:91px}.project-hero{display:flex;flex-direction:column;align-items:stretch;min-height:0;padding:40px 0}.project-big-title{font-size:clamp(43px,12vw,66px)}.project-hero-visual{height:340px;box-shadow:10px 12px 0 #0b1422}.project-intro-grid,.project-conclusion{display:grid;grid-template-columns:1fr;gap:24px}.project-metadata{margin-bottom:40px;gap:13px}.project-section{padding:45px 0}.project-gallery{grid-template-columns:1fr;gap:22px}.project-media.span-wide{grid-column:auto}.project-photo-shell,.project-media.span-wide .project-photo-shell{height:280px}.project-question{font-size:32px}.project-prose{font-size:16px}.project-step{padding:23px}.project-aside{padding-left:20px}.project-footer{flex-wrap:wrap}.archive-grid .featured-image{height:195px}.project-section h2{font-size:35px}}
+</style>
+<style id="v11-2-video-styles">
+.project-film-desc{color:#b7c9dd;font-size:clamp(15px,1.5vw,20px);line-height:1.7;margin:14px 0 28px;max-width:720px}
+.project-video-shell{background:#04070c;border:1px solid #355779;overflow:hidden;aspect-ratio:16/9;box-shadow:0 25px 70px rgba(0,0,0,.23)}
+.project-video-shell video{display:block;width:100%;height:100%;object-fit:contain;background:#03060b}
+.project-film-footnote{display:flex;justify-content:space-between;gap:20px;color:#79a9d8;font-size:11px;letter-spacing:.14em;margin-top:14px}
+.project-download-video{display:inline-block;margin-top:25px;color:#71b5ff}
+@media(max-width:640px){.project-film-footnote{font-size:9px;letter-spacing:.07em}.project-film-section h2{font-size:clamp(32px,8vw,52px)}}
+</style>
+<style>
+/* V12: new project studies: archive thumbnail treatment and tall documentation boards */
+.project-card .featured-image:has(img){background:#111d30}
+.project-card:hover .featured-image img{filter:saturate(1.12) contrast(1.02)}
+.project-media[data-asset='bubble_lamp_brief'] img,
+.project-media[data-asset='bubble_lamp_sketches'] img,
+.project-media[data-asset='bubble_lamp_safety'] img,
+.project-media[data-asset='bubble_lamp_review'] img,
+.project-media[data-asset='pouring_board1'] img,
+.project-media[data-asset='pouring_board2'] img,
+.project-media[data-asset='jpop_hero'] img{object-fit:contain;background:#172238}
+.project-media[data-asset='bubble_lamp_outcome'] img{object-fit:contain;background:#172238}
+.project-media[data-asset='pouring_board1'] .project-photo-shell,
+.project-media[data-asset='pouring_board2'] .project-photo-shell{height:clamp(440px,57vw,760px)}
+.project-media[data-asset='jpop_hero'] .project-photo-shell{height:clamp(420px,61vw,790px)}
+#projectView[data-theme='violet'] .project-question .accent-mark{color:#ac8cff}
+#projectView[data-theme='violet'] .project-hero-visual{box-shadow:25px 28px 0 #171329}
+@media(max-width:740px){
+.project-media[data-asset='pouring_board1'] .project-photo-shell,
+.project-media[data-asset='pouring_board2'] .project-photo-shell{height:460px}
+.project-media[data-asset='jpop_hero'] .project-photo-shell{height:330px}
+}
+</style><style>#projectView[data-archive='true'] .project-hero-visual:after{content:'TONY XU / PROJECT ARCHIVE'}</style><style id="portfolio-v14-gallery-corrections">
+/* Force real image boxes to fill the intentionally fixed ratio wrapper; avoid intrinsic-height clipping. */
+.project-card .featured-image{position:relative;overflow:hidden}
+.project-card .featured-image img{position:absolute;inset:8px;width:calc(100% - 16px)!important;height:calc(100% - 16px)!important;object-fit:contain!important}
+.project-card .frame-count{z-index:2}
+.project-photo-shell img,.project-media[data-asset] img{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:contain!important}
+.project-hero-visual::before{content:'';position:absolute;inset:-30px;background-image:var(--hero-art);background-size:cover;background-position:center;filter:blur(28px) brightness(.5);opacity:.48;transform:scale(1.07)}
+.project-hero-visual img{position:relative;z-index:1}
+.project-hero-visual::after{z-index:3}
+.zoom-hint{z-index:2}
+/* V14 | curated archive and document-safe responsive image treatments */
+.archive-filter-head{display:flex;justify-content:space-between;gap:18px;margin-top:45px;color:#87b0db;font-size:11px;font-weight:700;letter-spacing:.17em;text-transform:uppercase}
+.filter-row{margin-top:13px;gap:9px}
+.filter{border-radius:3px;padding:12px 16px;font-weight:600;white-space:normal;text-align:left}
+.project-card .featured-image{height:auto;aspect-ratio:16/10;display:grid;place-items:center;background:radial-gradient(ellipse at 55% 35%,#213b59,#0e1828 70%);padding:8px}
+.project-card .featured-image img{width:100%;height:100%;object-fit:contain !important;object-position:center;max-width:100%;max-height:100%;filter:none}
+.project-card:hover .featured-image img{transform:scale(1.025)}
+.archive-grid .featured-image{height:auto;aspect-ratio:16/10}
+.project-card .featured-info{padding-bottom:24px}
+.project-card .featured-info small{font-size:11px;line-height:1.55;max-width:90%;display:block}
+.project-card .featured-info p{font-size:13px;line-height:1.65;color:#9bafc9;min-height:0}
+.project-card .featured-info h3{font-size:clamp(21px,2vw,28px);line-height:1.2}
+.project-hero-visual img,.project-hero-visual.portrait img{object-fit:contain !important;object-position:center !important;background:linear-gradient(135deg,#182943,#0d1727)}
+.project-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 24px;align-items:start}
+.project-photo-shell{position:relative;display:grid;place-items:center;height:auto;aspect-ratio:4/3;min-height:0;overflow:hidden;border:1px solid #39506b;background:radial-gradient(ellipse at 50% 45%,#203a57,#101c2f 78%)}
+.project-media.span-wide{grid-column:1/-1}
+.project-media.span-wide .project-photo-shell{height:auto;min-height:0;aspect-ratio:16/9;max-height:none}
+.project-media.span-tall .project-photo-shell{aspect-ratio:3/4}
+.project-media img,.project-media[data-asset] img,.project-media[data-asset='fmm_poster'] img{width:100%;height:100%;object-fit:contain !important;object-position:center !important;display:block;background:transparent !important;max-height:100%}
+.project-image-button{display:block;width:100%;padding:0;border:0;color:inherit;background:transparent;text-align:inherit;cursor:zoom-in}
+.project-image-button:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+.zoom-hint{position:absolute;right:12px;bottom:12px;background:#071525e9;border:1px solid #42698a;padding:8px 11px;color:#e1edff;letter-spacing:.1em;font-size:10px;opacity:0;transition:opacity .25s}
+.project-image-button:hover .zoom-hint,.project-image-button:focus-visible .zoom-hint{opacity:1}
+.project-image-button:hover .project-photo-shell{border-color:#6d9ee0}
+.project-media figcaption{font-size:12px;line-height:1.55;color:#aabdd5;letter-spacing:.015em}
+.project-media[data-asset='pouring_board1'] .project-photo-shell,.project-media[data-asset='pouring_board2'] .project-photo-shell{aspect-ratio:3/4}
+.project-media[data-asset='dog_board_paintings'] .project-photo-shell{aspect-ratio:4/5}
+
+.project-media[data-asset='dog_board_left'] .project-photo-shell{aspect-ratio:3/4}
+.project-gallery .project-media{min-width:0}
+.image-zoom-dialog{padding:0;border:1px solid #6689ae;background:#08111e;color:#ecf4ff;width:min(96vw,1500px);max-width:none;max-height:95vh;overflow:auto;box-shadow:0 18px 80px #000a}
+.image-zoom-dialog::backdrop{background:#02060ce8;backdrop-filter:blur(9px)}
+.image-zoom-header{position:sticky;top:0;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 19px;background:#101e30;border-bottom:1px solid #315078}
+.image-zoom-header p{font-size:12px;letter-spacing:.035em;margin:0;line-height:1.5}
+.image-zoom-close{border:1px solid #6689ae;padding:8px 14px;font-size:12px;background:#172a44;color:#f1f7ff;cursor:pointer}
+.image-zoom-dialog img{width:100%;height:auto;object-fit:contain;display:block}
+.image-zoom-dialog figure{margin:0;padding:20px;display:grid;place-items:center}
+.image-zoom-dialog .image-zoom-meta{padding:0 20px 15px;font-size:11px;color:#8ba8c8}
+@media(max-width:730px){
+ .archive-grid{grid-template-columns:1fr;gap:18px}
+ .project-hero-visual{height:auto;aspect-ratio:4/3;min-height:260px}
+ .project-gallery{grid-template-columns:1fr;gap:20px}
+ .project-media.span-wide{grid-column:1}
+ .project-photo-shell,.project-media.span-wide .project-photo-shell{height:auto;min-height:0;aspect-ratio:4/3}
+ .project-media.span-tall .project-photo-shell{aspect-ratio:3/4}
+ .project-media[data-asset='lighting_process_v13'] .project-photo-shell{height:430px;min-height:0;aspect-ratio:auto}
+ .archive-filter-head{margin-top:25px}
+ .filter{font-size:12px;padding:11px 12px}
+ .project-card .featured-image{aspect-ratio:16/10}
+}
+</style></head>
+<body>
+<header><div class="wrap"><div class="identity"><a aria-label="Tony Xu — Home" class="logo tony-wordmark" href="#home" id="logoLink"><img src="assets/media_001_5dcc7a52eb1d9b.png" alt="Tony Xu logo" /></a></div><nav><a data-home-link="" href="#skills">Skills</a><a data-open-archive="" href="#archive">Projects</a><a data-open-contact="" href="#contact-page">About &amp; Contact</a><button aria-controls="sideMenu" aria-expanded="false" aria-label="Open secondary menu" class="menu-button" id="menuBtn"><span class="menu-lines"></span></button></nav></div></header>
+<div class="scrim" id="scrim"></div><aside aria-label="Secondary navigation" class="side-menu" id="sideMenu"><h2>EXPLORE / 02</h2><a data-home-link="" href="#home">Home</a><button class="menu-link" data-open-archive="">All Projects</button><a data-open-contact="" href="#contact-page">About &amp; Contact</a><a data-home-link="" href="#skills">Skills</a><span class="menu-note">A growing archive of physical products, interactive installations and visual explorations.</span></aside>
+<main id="homeView"><div class="hero-scroll hero-v7" id="home">
+<div class="hero-sticky">
+<div class="gridlines"></div><div class="hero-ambient"></div>
+<div class="hero-v6-top"><span>OBJECT / 001 — PERSONAL IDENTITY</span><span class="count" id="heroPhase">01 / IDENTITY</span></div>
+<div aria-label="Full-screen Tony Xu design identity shrinks and flips while scrolling, revealing three separate process modules: Sketch, Model, Make." class="hero-stage" id="heroStage" role="img"><div class="hero-flipper" id="heroFlipper">
+<div class="hero-front-v7">
+<div aria-hidden="true" class="front-grid-ambient"></div>
+<div aria-hidden="true" class="front-scanline"></div>
+<div class="front-topline"><span>TX — PERSONAL DESIGN PORTFOLIO</span><span>EST. AUCKLAND / NEW ZEALAND</span></div>
+<div class="front-layout">
+<div class="front-maincopy">
+<div class="front-micro"><span class="front-micro-dot"></span> PRODUCT DESIGN / PHYSICAL EXPERIENCE</div>
+<h1 class="hero-person-name"><span>TONY</span><span class="xu-name">XU<span class="name-period">.</span></span></h1>
+<div class="front-horizontal-rule"></div>
+<div class="front-traits"><span>PRODUCT DESIGN</span><span>PHYSICAL PROTOTYPING</span><span>INTERACTIVE EXPERIENCES</span></div>
+</div>
+<div aria-hidden="true" class="front-artwork">
+<svg fill="none" viewbox="0 0 520 545" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient id="v7wire" x1="20" x2="420" y1="0" y2="420"><stop stop-color="#B7E1FF"></stop><stop offset=".48" stop-color="#4DA7FF"></stop><stop offset="1" stop-color="#1756B5"></stop></lineargradient>
+<lineargradient id="v7face" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1667C4" stop-opacity=".31"></stop><stop offset="1" stop-color="#04162E" stop-opacity=".3"></stop></lineargradient>
+</defs>
+<g opacity=".26" stroke="#71AEED" stroke-width=".85">
+<circle cx="265" cy="260" r="207" stroke-dasharray="5 11"></circle>
+<circle cx="265" cy="260" r="144"></circle>
+<path d="M265 0V545M0 260H520M56 65 474 470M464 52 66 480" stroke-dasharray="5 8"></path>
+<path d="M0 70H520M0 445H520M76 0V545M442 0V545" opacity=".45"></path>
+</g>
+<g stroke="url(#v7wire)" stroke-linejoin="round" stroke-width="2.1">
+<path d="M265 93 409 174 409 339 265 423 121 339 121 174Z"></path>
+<path d="M265 93V259L409 339M265 259 121 339M265 259 409 174M265 259 121 174M265 259V423"></path>
+<path d="M265 137 371 196 371 312 265 374 159 312 159 196Z" stroke-dasharray="6 7" stroke-opacity=".44"></path>
+</g>
+<path d="M265 93 409 174 265 259 121 174Z" fill="url(#v7face)"></path><path d="M265 259 409 174V339L265 423Z" fill="#0B3B76" fill-opacity=".35"></path>
+<g opacity=".7" stroke="#A9D9FF" stroke-width="1.4"><path d="M265 60v23m-11-11h23M94 174h20m-10-10v20M417 339h24m-12-12v24M265 432v24m-12-12h24"></path><path d="M121 174h-28m316 0h26M121 339H94m315 0h27" stroke-dasharray="3 5"></path></g>
+<g fill="#77B7FA" font-family="Arial, sans-serif" font-size="12" letter-spacing="1.6"><text x="268" y="48">01 / CONCEPT</text><text x="320" y="462">FORM / 02</text><text x="20" y="284">XYZ</text></g>
+<g opacity=".8" stroke="#67B6FF" stroke-width="1.6"><path d="M406 98h49v50M88 371v55h55"></path><circle cx="409" cy="174" fill="#69B2FF" r="4"></circle><circle cx="121" cy="339" fill="#69B2FF" r="4"></circle></g>
+</svg>
+<div class="model-coordinates">FORM STUDY / 001 <span>3D → REALITY</span></div>
+</div>
+</div>
+<div class="front-bottomline"><span>I TURN IDEAS INTO <strong>FORM.</strong></span><span>SKETCH   /   MODEL   /   MAKE</span></div>
+</div>
+<div class="process-panel-v7 process-panel-1">
+<div class="process-inner">
+<div class="process-top"><span>01 / DESIGN PROCESS</span><span>01—03</span></div>
+<div class="process-name"><span class="process-number">01</span><h2>SKETCH</h2></div>
+<svg aria-hidden="true" class="back-icon" fill="none" viewBox="0 0 260 235" xmlns="http://www.w3.org/2000/svg">
+  <!-- sketchbook-style exploratory construction guides -->
+  <g stroke="#78B7ED" stroke-width="0.75" opacity=".30" stroke-dasharray="3 5">
+    <path d="M8 182H254M13 80H251M132 2V231M19 24 244 213M2 141 245 27"/>
+    <ellipse cx="128" cy="118" rx="112" ry="103"/>
+    <path d="m32 65 100-49 104 51M25 192l109 41 112-52"/>
+  </g>
+  <!-- sketch base: the same folding product explored with rough multiple pencil lines -->
+  <g stroke="#A7D5FF" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="1.65" d="m34 91 90-45 99 50-92 49L34 91Z M34 91v86l97 45v-77m0 77 92-47V96"/>
+    <path stroke-width="1.12" opacity=".7" d="m36 94 87-44 99 49-90 47-96-49m1 82 96 43 89-45m-88-31 1 76"/>
+    <!-- drawn construction / fold lines -->
+    <path stroke-width="1.08" opacity=".65" stroke-dasharray="5 4" d="m124 46 1 83m-91-38 93 43 96-38M81 68v87m94-86v87"/>
+    <path stroke-width="1.5" d="m34 91 30-43 61-2m0 0 32-28 66 78m-92 49-29-24-68 56m189-81 22-36-22 115"/>
+    <path stroke-width="1.1" opacity=".7" d="m30 87 35-41m-29 48 29-39m59-11 31-29m-23 132-25-25m-73 55-4 9m196-88 23-36"/>
+  </g>
+  <!-- hand annotations and measuring points -->
+  <g stroke="#58AFFF" stroke-width="1.4" opacity=".92" stroke-linecap="round">
+    <path d="M49 40 17 21h-7m7 0 7-3m-7 3 2 7"/>
+    <path d="m201 183 31 18h13m-13 0 6-4m-6 4 1-7"/>
+    <path d="m190 39 22-20m-8 1 8-1-1 8"/>
+    <circle cx="34" cy="91" r="2.3" fill="#58AFFF"/>
+    <circle cx="131" cy="145" r="2.3" fill="#58AFFF"/>
+    <circle cx="223" cy="96" r="2.3" fill="#58AFFF"/>
+    <path d="M12 154h31m-15-15v30" opacity=".7"/>
+    <path d="M234 112h21m-11-11v22" opacity=".7"/>
+  </g>
+  <g fill="#91C6F9" font-size="8.2" font-family="Arial,Helvetica,sans-serif" letter-spacing=".8" font-weight="700">
+    <text x="8" y="14">01 / IDEA</text>
+    <text x="188" y="14">FOLD A</text>
+    <text x="205" y="219">REV. 02</text>
+    <text x="10" y="211">EXPLORE / ITERATE</text>
+  </g>
+</svg>
+<div class="process-bottom"><span>IDEA</span><span>TONY XU / DESIGN PRACTICE</span></div>
+</div>
+</div><div class="process-panel-v7 process-panel-2">
+<div class="process-inner">
+<div class="process-top"><span>02 / DESIGN PROCESS</span><span>02—03</span></div>
+<div class="process-name"><span class="process-number">02</span><h2>MODEL</h2></div>
+<svg aria-hidden="true" class="back-icon" fill="none" viewBox="0 0 260 235" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="modelV8Fill" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#285488" stop-opacity=".50"/><stop offset="1" stop-color="#0B2647" stop-opacity=".24"/></linearGradient>
+  </defs>
+  <!-- measurement and viewport guides -->
+  <g stroke="#73B4EB" opacity=".31" stroke-width=".8" stroke-dasharray="3 6">
+    <path d="M8 199H250 M135 0V233M6 30 252 210 M10 213 245 23"/>
+    <ellipse cx="134" cy="122" rx="106" ry="99"/>
+    <path d="m52 52 78-38 85 40"/>
+  </g>
+  <!-- separated lid and interior body: an exploded CAD assembly -->
+  <g stroke="#8CCBFF" stroke-linejoin="round" stroke-width="1.5">
+    <path d="m48 55 84-42 85 43-84 42Z" fill="#224C7D" fill-opacity=".32"/>
+    <path d="m48 55 0 12 85 43V98m0 12 84-43V56" fill="url(#modelV8Fill)"/>
+    <path d="m64 55 68-34 68 35-67 34Z" opacity=".65"/>
+    <path d="m53 97 78-39 86 43-84 42Z" fill="#183A64" fill-opacity=".42"/>
+    <path d="m53 97 0 86 80 38v-78m0 78 84-41v-79" fill="url(#modelV8Fill)"/>
+    <path d="m72 100 59-30 65 32-63 31Z" opacity=".82"/>
+    <path d="m72 100 0 16 61 29 63-30v-13" opacity=".68"/>
+    <!-- folded internal support ribs -->
+    <path d="m84 121 0 54m16-46v54m61-51v66m18-75v65" opacity=".56"/>
+    <path d="m53 145 80 38 84-41" opacity=".7"/>
+    <path d="m133 143 0 78" opacity=".8"/>
+  </g>
+  <!-- exploded alignment lines and CAD dimension arrows -->
+  <g stroke="#5FB4FF" stroke-width="1.15" fill="none" stroke-linecap="round">
+    <path d="M70 70v31M133 110v33M199 69v34" stroke-dasharray="3 4"/>
+    <path d="m70 77-3-5 3-3 3 3m60 45-3-5 3-3 3 3m63-36-3-5 3-3 3 3"/>
+    <path d="M40 95 22 105v78l18 10M22 105l-4 7m4-7 7 1m-7 77-3-7m3 7 7-1"/>
+    <path d="M54 193 130 230l94-46"/>
+    <path d="M51 204v11m164-26v11"/>
+    <circle cx="133" cy="143" r="3" fill="#5FB4FF"/>
+    <circle cx="53" cy="97" r="2" fill="#5FB4FF"/>
+  </g>
+  <g fill="#A3D2FF" font-size="8.2" font-family="Arial,Helvetica,sans-serif" letter-spacing=".8" font-weight="700">
+    <text x="8" y="19">02 / CAD</text><text x="188" y="14">EXPLODED</text>
+    <text x="3" y="147" transform="rotate(-90 9 147)">110 mm</text>
+    <text x="178" y="225">SECTION A-A</text>
+    <text x="10" y="224">X / Y / Z</text>
+  </g>
+</svg>
+<div class="process-bottom"><span>FORM</span><span>TONY XU / DESIGN PRACTICE</span></div>
+</div>
+</div><div class="process-panel-v7 process-panel-3">
+<div class="process-inner">
+<div class="process-top"><span>03 / DESIGN PROCESS</span><span>03—03</span></div>
+<div class="process-name"><span class="process-number">03</span><h2>MAKE</h2></div>
+<svg aria-hidden="true" class="back-icon" fill="none" viewBox="0 0 260 235" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="makeV8Front" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9ACDFF"/><stop offset=".45" stop-color="#528FD1"/><stop offset="1" stop-color="#235788"/></linearGradient>
+    <linearGradient id="makeV8Top" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#497DAF"/><stop offset="1" stop-color="#1A3C66"/></linearGradient>
+    <linearGradient id="makeV8Side" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#204C7B"/><stop offset="1" stop-color="#0C203F"/></linearGradient>
+    <filter id="makeV8Glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+  <!-- stage shadow and object elevation -->
+  <ellipse cx="133" cy="215" rx="108" ry="14" fill="#3D9AFB" opacity=".22" filter="url(#makeV8Glow)"/>
+  <path d="M10 212h244" stroke="#77B8F3" opacity=".27" stroke-dasharray="4 5"/>
+  <!-- formed product body -->
+  <g stroke-linejoin="round" stroke="#9FD3FF" stroke-width="1.65">
+    <path d="m38 71 86-45 98 47-89 47Z" fill="url(#makeV8Top)"/>
+    <path d="M38 71v105l95 47V120Z" fill="url(#makeV8Front)"/>
+    <path d="m133 120 89-47v107l-89 43Z" fill="url(#makeV8Side)"/>
+    <!-- inset top seam with bevel -->
+    <path d="m56 72 68-34 80 36-71 35Z" fill="#132D50" fill-opacity=".75" stroke="#69AFF0" stroke-width=".95"/>
+    <path d="m124 39 0 68m-68-35 77 37 71-35" stroke="#5590C8" stroke-width=".9" opacity=".52"/>
+    <!-- inset panel on left face -->
+    <path d="m57 116 58 29v49l-58-28Z" fill="#102D51" stroke="#B5DDFB" stroke-width="1.5"/>
+    <path d="m64 127 44 21v36l-44-21Z" fill="#0A2341" stroke="#69B5FE" stroke-width=".95"/>
+    <path d="m68 132 35 17" stroke="#64B5FF" stroke-width="1.1" opacity=".7"/>
+    <!-- precision cutouts on right face -->
+    <path d="m152 139 54-28v9l-54 28Z" fill="#081A32" stroke="#5389BD" stroke-width=".9"/>
+    <path d="m152 159 54-28v9l-54 28Z" fill="#081A32" stroke="#5389BD" stroke-width=".9"/>
+    <path d="m152 179 54-28v9l-54 28Z" fill="#081A32" stroke="#5389BD" stroke-width=".9"/>
+  </g>
+  <!-- product details: screws, status light and machined edges -->
+  <g fill="#C1E2FF" stroke="#85C7FF" stroke-width=".7">
+    <circle cx="49" cy="92" r="2"/><circle cx="123" cy="125" r="2"/>
+    <circle cx="49" cy="167" r="2"/><circle cx="123" cy="207" r="2"/>
+  </g>
+  <circle cx="112" cy="56" r="4" fill="#6FBAFF"/><circle cx="112" cy="56" r="7.5" fill="none" stroke="#67B9FF" opacity=".55"/>
+  <path d="m40 178 93 46 87-42" stroke="#72BDFD" stroke-width="2" opacity=".7"/>
+  <!-- technical callouts -->
+  <g stroke="#7BBDFC" stroke-width="1.1" fill="none" opacity=".9">
+    <path d="m188 46 30-27h29m-29 0-5 2m5-2-2 6"/>
+    <path d="M82 163 32 194H9"/>
+    <path d="M153 143 236 112h14"/>
+    <circle cx="188" cy="46" r="2.5" fill="#7BBDFC"/>
+    <circle cx="82" cy="163" r="2.5" fill="#7BBDFC"/>
+    <circle cx="153" cy="143" r="2.5" fill="#7BBDFC"/>
+  </g>
+  <g fill="#9AD1FE" font-size="8" font-family="Arial,Helvetica,sans-serif" letter-spacing=".75" font-weight="700">
+    <text x="9" y="16">03 / PROTOTYPE</text>
+    <text x="190" y="14">FINISH</text>
+    <text x="8" y="206">DETAIL A</text>
+    <text x="208" y="102">VENT</text>
+    <text x="188" y="228">MATERIAL / 01</text>
+  </g>
+</svg>
+<div class="process-bottom"><span>OUTCOME</span><span>TONY XU / DESIGN PRACTICE</span></div>
+</div>
+</div><div aria-hidden="true" class="hero-edge-v7 edge-top"></div><div aria-hidden="true" class="hero-edge-v7 edge-bottom"></div><div aria-hidden="true" class="hero-edge-v7 edge-left"></div><div aria-hidden="true" class="hero-edge-v7 edge-right"></div></div></div>
+<div class="hero-meta"><span id="heroDescription">DESIGN THROUGH PHYSICAL INTERACTION</span><span class="hero-status" id="heroStatus">01 — PERSONAL IDENTITY</span></div>
+<div aria-hidden="true" class="hero-progress"><i class="active"></i><i></i><i></i></div>
+<div class="scroll-cue" id="scrollCue">SCROLL TO EXPLORE ↓</div>
+</div>
+</div>
+<section class="content" id="about"><div class="wrap about-grid"><div class="portrait-frame"><img alt="Portrait of Tony Xu" src="assets/media_002_afcadaba1110ec.jpg"/><span class="portrait-corner" aria-hidden="true"></span><div class="portrait-label"><span>TONY XU / PORTRAIT</span><span>2026</span></div></div><div><div class="section-label">01 / INTRODUCTION</div><h2 class="section-heading">About Me<span class="dot">.</span></h2><div class="about-text"><p>Hi, I'm Tony Xu, a Design student at the University of Auckland, New Zealand.</p><p>My interests lie in product design, physical prototyping, and interactive experiences. I enjoy exploring how creative ideas can be transformed into tangible products and experiences that people can see, touch, and interact with.</p><p>Through experimentation, 3D modelling, and hands-on making, I aim to <strong>bridge the gap between ideas and real-world experiences.</strong> Whether creating something entirely new or improving an existing design, my goal is to make technology and physical objects more engaging, accessible, and meaningful to people.</p></div><div class="about-actions"><a class="text-link" data-open-contact="" href="#contact-page">MORE ABOUT ME →</a></div></div></div></section>
+<section class="content" id="selected"><div class="wrap"><div class="section-label">02 / FEATURED WORK</div><div class="section-headline"><h2 class="section-heading">Selected Projects<span class="dot">.</span></h2><div class="section-subtitle">Selected work across product design, tangible interactions, installation and visual communication.</div></div><div class="feature-grid" id="featuredProjects"></div><div class="more"><button data-open-archive="">EXPLORE ALL PROJECTS →</button></div></div></section>
+<section class="content" id="skills"><div class="wrap"><div class="section-label">03 / CAPABILITIES</div><h2 class="section-heading">Skills<span class="dot">.</span></h2><div class="skills-groups"><div class="skill-group"><h3>DESIGN &amp; MAKING</h3><div class="skills-cloud"><span class="skill" tabindex="0">Product Design</span><span class="skill" tabindex="0">Physical Prototyping</span><span class="skill" tabindex="0">3D Modelling</span><span class="skill" tabindex="0">Interactive Installations</span><span class="skill" tabindex="0">Visual Communication</span><span class="skill" tabindex="0">Creative Experimentation</span><span class="skill" tabindex="0">Painting</span><span class="skill" tabindex="0">Photography</span><span class="skill" tabindex="0">Sketching &amp; Illustration</span></div></div><div class="skill-group"><h3>TOOLS &amp; TECHNOLOGY</h3><div class="skills-cloud"><span class="skill" tabindex="0">Fusion 360</span><span class="skill" tabindex="0">Figma</span><span class="skill" tabindex="0">Illustrator</span><span class="skill" tabindex="0">Photoshop</span><span class="skill" tabindex="0">Python</span><span class="skill" tabindex="0">p5.js</span></div></div><div class="skill-group"><h3>COMMUNICATION &amp; LANGUAGES</h3><div class="skills-cloud"><span class="skill" tabindex="0">Mandarin · Native</span><span class="skill" tabindex="0">English · Professional</span><span class="skill" tabindex="0">German · Basic</span><span class="skill" tabindex="0">Cross-cultural Communication</span></div></div><div class="skill-group"><h3>BUSINESS &amp; COLLABORATION</h3><div class="skills-cloud"><span class="skill" tabindex="0">Marketing &amp; Social Media</span><span class="skill" tabindex="0">Project Coordination</span><span class="skill" tabindex="0">Event Management</span><span class="skill" tabindex="0">Team Collaboration</span></div></div></div></div></section></main>
+<section aria-label="About and contact page" id="contactView"><div class="wrap about-page">
+<div class="section-label">ABOUT / THE PERSON BEHIND THE WORK</div>
+<div class="about-page-header"><div><span class="micro">TONY XU / DESIGN STUDENT / AUCKLAND</span><h1>MORE THAN<br><em>A DESIGNER.</em></h1><p class="page-lead">I am curious about how ideas become objects, how people experience technology, and how the things we make can bring people closer together.</p><div class="about-highlights"><span>SHANGHAI → AUCKLAND</span><span>7 YEARS IN NZ</span><span>SKETCH · MODEL · MAKE</span></div></div><div class="mini-photo"><img alt="Portrait of Tony Xu" src="assets/media_002_afcadaba1110ec.jpg"/><div class="portrait-label"><span>PERSONAL PROFILE</span><span>01 / TX</span></div></div></div>
+<div class="about-page-columns"><div class="stories">
+<section class="story"><span class="story-no">01 / MY STORY</span><h2>Shanghai to Auckland.</h2><p>I'm originally from Shanghai, China, and I've spent the past seven years living in New Zealand. Experiencing life across different places and cultures has shaped the way I notice everyday objects, communicate with people, and think about belonging.</p><p>I'm studying for a Bachelor of Design at the University of Auckland. Through different projects, I've become especially interested in making things that exist beyond a screen — products, prototypes, and interactive experiences people can actually use.</p></section>
+<section class="story"><span class="story-no">02 / HOW I WORK</span><h2>Ideas deserve to be made.</h2><p>I enjoy the full process, from an early sketch to a 3D model and then a physical prototype. Testing a material, adjusting a mechanism, or seeing someone interact with an object often teaches me more than a polished concept alone.</p><p>I'm interested in both creating something entirely new and rethinking something that already exists. For me, the goal is always to make an idea useful, engaging, and meaningful in the real world.</p><figure class="story-figure"><img src="assets/media_003_e93b0700a89099.jpg" alt="Tony Xu soldering an electronic component at a university electronics workbench" loading="eager" decoding="async"><figcaption><span>HANDS-ON / 01</span>Prototyping, circuitry &amp; material testing</figcaption></figure></section>
+<section class="story"><span class="story-no">03 / BEYOND THE STUDIO</span><h2>Curiosity beyond the studio.</h2><p>Photography and painting help me notice details, explore colour, and tell stories from a different perspective. I also enjoy working with people through student association activities, marketing, and event coordination — experiences that bring a practical, collaborative side to my design practice.</p><p>Outside of design projects, I enjoy photography, exploring new places, personal style, and the occasional bubble tea. I am also very much a dog person.</p><figure class="story-figure"><img src="assets/media_004_fbf1e90a05faee.jpg" alt="Tony Xu working outdoors with a camera and tripod" loading="eager" decoding="async"><figcaption><span>THROUGH THE LENS / 02</span>Photography as a way of observing the world</figcaption></figure></section>
+<section class="story"><span class="story-no">04 / COMMUNICATION &amp; PERSPECTIVE</span><h2>Between languages and ideas.</h2><p>I speak Mandarin and English, with basic German. Living between Shanghai and Auckland has made cross-cultural communication a meaningful part of how I collaborate and approach different audiences.</p></section>
+<div class="story-insights"><div class="story-insight"><b>MAKE</b><span>3D modelling<br/>Physical prototyping</span></div><div class="story-insight"><b>EXPLORE</b><span>Photography<br/>Painting</span></div><div class="story-insight"><b>CONNECT</b><span>Marketing<br/>Events &amp; teamwork</span></div></div>
+<div class="about-page-signoff">SKETCH <span>·</span> MODEL <span>·</span> MAKE</div>
+</div>
+<aside class="reach-card"><div class="reach-top"><span class="story-no">GET IN TOUCH / 04</span><h2>LET'S<br><em>CONNECT.</em></br></h2><p>Open to conversations, creative collaborations, and new opportunities.</p></div><div class="reach-detail"><span>EMAIL</span><a class="address" href="mailto:zxu263@aucklanduni.ac.nz?subject=Hello%20Tony" id="emailAddress">zxu263@aucklanduni.ac.nz</a><div class="contact-buttons"><a class="contact-button primary" href="mailto:zxu263@aucklanduni.ac.nz?subject=Hello%20Tony">OPEN EMAIL APP ↗</a><button class="contact-button" id="copyEmail" type="button">COPY EMAIL</button></div><p aria-live="polite" class="copy-status" id="copyStatus"></p></div><div class="reach-detail"><span>BASED IN</span><strong>Auckland, New Zealand</strong></div><div class="reach-detail"><span>FOCUS</span><strong>Products · Prototyping · Interaction</strong></div><a class="back-home" data-home-link="" href="#home">← BACK TO HOME</a></aside>
+</div><section class="life-gallery" aria-label="Personal photographs and travel moments">
+ <div class="life-gallery-header"><div><span class="story-no">05 / OUTSIDE THE STUDIO</span><h2>Places. Moments. Personal style<span>.</span></h2></div><p>Sometimes the best inspiration comes from stepping away from a project. A few moments from the places I visit and the everyday things I enjoy.</p></div>
+ <div class="life-gallery-grid"><figure class="life-photo"><img src="assets/media_005_e8f49f6d961eae.jpg" alt="Tony Xu on a forest suspension bridge" loading="eager" decoding="async"><figcaption><span>01 / PLACES</span>Exploring</figcaption></figure><figure class="life-photo"><img src="assets/media_006_84df28a16ac675.jpg" alt="Tony Xu with the Auckland skyline across the water" loading="eager" decoding="async"><figcaption><span>02 / AUCKLAND</span>Home away from home</figcaption></figure><figure class="life-photo"><img src="assets/media_007_45808a15a534e0.jpg" alt="Tony Xu in white sunglasses outdoors" loading="eager" decoding="async"><figcaption><span>03 / PERSONAL STYLE</span>Everyday expression</figcaption></figure><figure class="life-photo"><img src="assets/media_008_dd88eb0b1b0e11.jpg" alt="Tony Xu by the sea in the evening" loading="eager" decoding="async"><figcaption><span>04 / MOMENTS</span>The little things</figcaption></figure><figure class="life-photo"><img src="assets/media_009_5e2f8d64cc07c4.jpg" alt="Tony Xu in front of colourful architecture on a city street" loading="eager" decoding="async"><figcaption><span>05 / TRAVEL</span>New perspectives</figcaption></figure></div>
+ </section>
+<div class="footer-row"><span>© 2026 TONY XU</span><span>SKETCH · MODEL · MAKE</span><span>PORTFOLIO V10</span></div>
+</div></section>
+<section id="archiveView"><div class="wrap"><div class="archive-head"><div><div class="section-label">PROJECT ARCHIVE / COLLECTION</div><h1 class="section-heading">All Projects<span class="dot">.</span></h1><p class="about-text">An evolving collection of product, interactive and visual work.</p></div><a class="archive-back" data-home-link="" href="#selected">← BACK TO HOME</a></div><div class="archive-filter-head"><span>FILTER BY PRACTICE</span><span id="projectCount"></span></div><div aria-label="Project categories" class="filter-row"><button class="filter active" data-filter="all">All Work</button><button class="filter" data-filter="product">Product & Making</button><button class="filter" data-filter="interactive">Interactive & Installation</button><button class="filter" data-filter="branding">Branding & Communication</button><button class="filter" data-filter="exploration">Art & Material Studies</button></div><div class="archive-grid" id="allProjects"></div><p class="archive-note">A broader selection of product, visual and material projects from different stages of my practice.</p></div></section>
+<script>
+const projects=[
+{title:'Echo Hollow',kind:'Interactive Installation · Physical & Digital',tags:['product','interactive','innovation'],description:'A public installation combining physical devices and a digital platform to encourage anonymous connection across time and place.'},
+{title:'Smart Couch',kind:'Product Design · Smart Objects',tags:['product','interactive','innovation'],description:'An interactive furniture concept using pressure sensing and motorised feedback to encourage healthier sitting habits.'},
+{title:'Receipts of Relationships',kind:'Installation Art · Data Physicalisation',tags:['interactive','innovation'],description:'A physical installation translating personal social interactions into printed receipts.'},
+{title:'First Moments Matter',kind:'Brand Campaign · Visual Communication',tags:['branding'],description:'An Auckland Airport welcome campaign exploring meaningful first impressions through physical and digital touchpoints.'},
+{title:'Loop Lab',kind:'Co-design · Reuse Systems',tags:['product','innovation'],description:'A co-design exploration of more visible and accessible material reuse in a shared design studio.'},
+{title:'Fridge Scanner',kind:'Product Concept · Smart Objects',tags:['product','innovation'],description:'A smart kitchen product concept exploring food recognition, scanning and practical interaction.'},
+{title:'Build My Profile',kind:'Tangible Interaction · Personal Identity',tags:['interactive','innovation'],description:'A physical sponge-based identity exploration that informs the interactive language of this portfolio.'}
+];
+function card(project,index){const number=String(index+1).padStart(2,'0');return `<article class="featured-card" data-tags="${project.tags.join(' ')}"><div class="featured-image">[ ${project.title} — image ${number} ]</div><div class="featured-info"><small>${number} / ${project.kind}</small><h3>${project.title}</h3><p>${project.description}</p></div></article>`}
+document.getElementById('featuredProjects').innerHTML=projects.slice(0,4).map(card).join('');document.getElementById('allProjects').innerHTML=projects.map(card).join('');
+const menu=document.getElementById('sideMenu'),scrim=document.getElementById('scrim'),btn=document.getElementById('menuBtn');function setMenu(open){menu.classList.toggle('open',open);scrim.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open))}btn.addEventListener('click',()=>setMenu(!menu.classList.contains('open')));scrim.addEventListener('click',()=>setMenu(false));document.addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
+function showArchive(){setMenu(false);document.body.classList.remove('contact-active');document.body.classList.add('archive-active');history.replaceState(null,'','#archive');window.scrollTo({top:0,behavior:'instant'})}
+function showContact(){setMenu(false);document.body.classList.remove('archive-active');document.body.classList.add('contact-active');history.replaceState(null,'','#contact-page');window.scrollTo({top:0,behavior:'instant'})}
+function showHome(hash){setMenu(false);document.body.classList.remove('archive-active','contact-active');if(hash){setTimeout(()=>document.querySelector(hash)?.scrollIntoView({behavior:'smooth'}),20)}else window.scrollTo({top:0,behavior:'instant'})}
+document.querySelectorAll('[data-open-archive]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();showArchive()}));
+document.querySelectorAll('[data-open-contact]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();showContact()}));
+document.querySelectorAll('[data-home-link]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const hash=a.getAttribute('href');history.replaceState(null,'',hash);showHome(hash)}));
+document.getElementById('logoLink').addEventListener('click',e=>{e.preventDefault();history.replaceState(null,'','#home');showHome('#home')});
+document.querySelectorAll('.filter').forEach(f=>f.addEventListener('click',()=>{
+  document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b===f));
+  let shown=0;
+  document.querySelectorAll('#allProjects .featured-card').forEach(c=>{
+    const yes=f.dataset.filter==='all'||c.dataset.tags.split(' ').includes(f.dataset.filter);
+    c.classList.toggle('hidden-card',!yes);if(yes)shown++;
+  });
+  const n=document.getElementById('projectCount');if(n)n.textContent=shown+' PROJECT'+(shown===1?'':'S');
+}));
+let ticking=false;
+const clamp01=n=>Math.max(0,Math.min(1,n));
+const smoothstep=(a,b,x)=>{let t=clamp01((x-a)/(b-a));return t*t*(3-2*t)};
+function updateHero(){
+ const hero=document.querySelector('.hero-scroll'),stage=document.getElementById('heroStage');
+ if(!hero||!stage)return;
+ const distance=Math.max(1,hero.offsetHeight-innerHeight);
+ const p=clamp01(-hero.getBoundingClientRect().top/distance);
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ // One seamless hero first. It reduces in size as it turns, then its reverse separates into three sections.
+ const shrink=reduced?1:smoothstep(.10,.50,p);
+ const flip=reduced?1:smoothstep(.29,.66,p);
+ const split=reduced?1:smoothstep(.70,.93,p);
+ stage.style.setProperty('--shrink',shrink.toFixed(4));
+ stage.style.setProperty('--flip',flip.toFixed(4));
+ stage.style.setProperty('--split',split.toFixed(4));
+ hero.style.setProperty('--heroMetaOpacity',smoothstep(.25,.49,p).toFixed(4));
+ const phase=p<.29?0:p<.70?1:2;
+ document.getElementById('heroPhase').textContent=['01 / IDENTITY','02 / SCALE + FLIP','03 / THREE PIECES'][phase];
+ document.getElementById('heroDescription').textContent=['ONE IDENTITY. ONE FULL SCREEN.','PHYSICAL TO DIGITAL','SKETCH · MODEL · MAKE'][phase];
+ document.getElementById('heroStatus').textContent=['01 — PERSONAL IDENTITY','02 — TRANSFORMATION','03 — IDEA / FORM / OUTCOME'][phase];
+ document.getElementById('scrollCue').textContent=p>.94?'CONTINUE TO ABOUT ME ↓':'SCROLL TO EXPLORE ↓';
+ document.querySelectorAll('.hero-progress i').forEach((node,i)=>node.classList.toggle('active',i===phase));
+ ticking=false;
+}
+addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(updateHero);ticking=true}},{passive:true});
+addEventListener('resize',updateHero);
+if(location.hash==='#archive')showArchive();else if(location.hash==='#contact-page')showContact();
+updateHero();
+
+// Email app links use standard mailto; copy is available if no mail app is configured.
+document.getElementById('copyEmail')?.addEventListener('click',async()=>{
+ const address='zxu263@aucklanduni.ac.nz';const feedback=document.getElementById('copyStatus');
+ try{if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(address)}else{const box=document.createElement('textarea');box.value=address;box.style.position='fixed';box.style.opacity='0';document.body.appendChild(box);box.select();if(!document.execCommand('copy'))throw new Error('Copy unavailable');box.remove()}feedback.textContent='Email address copied.'}
+ catch(e){feedback.textContent='Select and copy the email address above.'}
+});
+</script><section id="projectView" aria-label="Independent project detail page"></section>
+<script id="project-v11-script">const portfolioAssets={"echo_models":"assets/media_010_060d4067ffa7a2.jpg","move_teddy":"assets/media_011_5a9697877b9439.jpg","move_couch":"assets/media_012_7824eda113350f.jpg","move_electronics":"assets/media_013_747bfd89aba579.jpg","receipt_install":"assets/media_014_7e897853e03cce.jpg","receipt_printer":"assets/media_015_818603b1101369.jpg","receipt_close":"assets/media_016_5b5d870c557002.jpg","fmm_poster":"assets/media_017_499b87c99e1fed.jpg","fmm_pouch_front":"assets/media_018_7901605ef9f063.jpg","fmm_pouch_back":"assets/media_019_6deacf320b57cf.jpg","fmm_stitching":"assets/media_020_ba207d57baf98f.jpg","echo_poster":"assets/media_021_99449b2c6220fa.jpg","echo_cards":"assets/media_022_88fdb39a661e65.jpg","echo_interaction":"assets/media_023_c6fd9a059ea6c5.jpg","echo_site":"assets/media_024_0da57a2691827b.jpg","echo_exhibition":"assets/media_025_b3137c0c6157b0.jpg","echo_locations":"assets/media_026_edb5a7154368c7.jpg","move_sketch":"assets/media_027_a8b8ff5ffefc29.jpg","fmm_brand":"assets/media_028_3d0d5c72986421.jpg","fmm_screens":"assets/media_029_140c5645b964ff.jpg","fmm_early":"assets/media_030_b464ad781eed2f.jpg","fmm_visual":"assets/media_031_08cef3f0ca612a.jpg"};
+const additionalProjectAssets={"bubble_lamp_hero":"assets/media_032_24add7989cd0fc.webp","bubble_lamp_brief":"assets/media_033_98af555332731b.webp","bubble_lamp_sketches":"assets/media_034_56d7f8ceff221f.webp","bubble_lamp_safety":"assets/media_035_5e060d6367ca59.webp","bubble_lamp_making":"assets/media_036_b47b203a19b0ff.webp","bubble_lamp_outcome":"assets/media_037_812a53b9169c4a.webp","bubble_lamp_review":"assets/media_038_0f86f9715b5d17.webp","watch_hero":"assets/media_039_cc27c59fae200a.webp","watch_in_use":"assets/media_040_1229fd8a8783ea.webp","pouring_hero":"assets/media_041_f6ffd218349f9a.webp","pouring_board1":"assets/media_042_83992727f93680.webp","pouring_board2":"assets/media_043_2184de83403b50.webp","jpop_hero":"assets/media_044_9ff44501f0777c.webp"};
+Object.assign(portfolioAssets,additionalProjectAssets);
+portfolioAssets["random_illustration_sheet"]="assets/media_045_5e3d7ecbfad4c5.png";
+portfolioAssets["tote_design_screen"]="assets/media_046_2dbc302a7b113b.jpg";
+portfolioAssets["tote_machine"]="assets/media_047_4ff8aa7ee7d8cc.jpg";
+portfolioAssets["tote_panels"]="assets/media_048_088abd003f74b0.jpg";
+portfolioAssets["tote_back"]="assets/media_049_ac4cb8124deace.jpg";
+portfolioAssets["lighting_final_v13"]="assets/media_050_8ff38bd8046a88.png";
+portfolioAssets["lighting_detail_v13"]="assets/media_051_13bd4d4a4df330.png";
+portfolioAssets["lighting_process_v13"]="assets/media_052_b1b5355007f81a.png";
+portfolioAssets["tote_front"]="assets/media_053_d29f84c59e1b39.jpg";
+portfolioAssets["dog_board_paintings"]="assets/media_054_17ee8e1f7eda6b.jpg";
+const portfolioProjects=[{"slug":"echo-hollow","title":"Echo Hollow","line":"A tree for human connection.","category":"INTERACTIVE INSTALLATION / PHYSICAL + DIGITAL","year":"2026","scope":"TEAM PROJECT / CONCEPT ORIGINATOR & PROJECT LEAD","disciplines":"Physical interaction / Storytelling / Digital platform","hero":"echo_models","hero_position":"center center","teaser":"A place for small stories to stay, even when people move on.","abstract":"Echo Hollow explores how a place can hold memories across time. It combines an approachable tree-inspired physical installation, handwritten message cards and an online community that allows people to discover and contribute anonymous stories.","question":"How might a shared place help strangers feel connected, even when they never meet?","myrole":"I originated Echo Hollow and led its overall concept and design direction. I took primary responsibility for interaction design, AI-assisted physical-model development, building and troubleshooting the companion website, online data integration and coordinating the visual presentation. Developed collaboratively with the group.","approach":[["01 / NOTICE","Stories and belonging","I first proposed the concept of an anonymous space for personal memories and helped guide the team from that starting idea toward a broader design question about belonging, place and time."],["02 / GIVE IT FORM","A physical place to leave a thought","We explored tree-inspired structures for public locations and compact countertop versions, using clay studies, AI-assisted 3D modelling and physical 3D prints to test form and scale."],["03 / CONNECT","A handwritten and digital experience","The physical interaction uses a question card, a written response and a place to leave it. The companion website extends those stories beyond the installation, connecting different times and locations."]],"images":[["echo_poster","Concept poster / A tree for human connection","span-wide"],["echo_models","Physical form studies and 3D-printed models",""],["echo_cards","Question-card visual system and printed prompts",""],["echo_interaction","Physical interaction sequence and device prompts",""],["echo_site","Companion website with message, community and profile pages",""],["echo_exhibition","Final exhibition / installation and digital display","span-wide"],["echo_locations","Proposed physical installations in public interchange settings",""]],"outcome":"A physical\u2013digital prototype system: tree-inspired device models, six question-card prompts, a community website and a proposed presence in public and small-business spaces.","learning":"Leading this collaborative project taught me how much work it takes to carry a concept from an early idea into tangible and digital outcomes. I drove much of the development, but also learned to make my design reasoning clear to teammates and to consider feasibility, privacy and real-world interactions alongside the original vision.","link":"https://zheweixu84.github.io/echo-hollow/","linklabel":"VISIT ECHO HOLLOW WEBSITE","theme":"forest"},{"slug":"move-smart-couch","title":"MOVE","line":"A little movement, a better break.","category":"PRODUCT DESIGN / RESPONSIVE FURNITURE","year":"2026","scope":"COLLABORATIVE UNIVERSITY PROTOTYPE","disciplines":"Smart objects / Physical prototyping / Electronics","hero":"move_teddy","hero_position":"center center","teaser":"MOVE / Smart Couch \u2014 a familiar place to sit that gently encourages a moment of movement.","abstract":"MOVE is an interactive seating prototype exploring how furniture can encourage healthier habits without turning rest into a punishment. Sensing and physical feedback are combined in a small upholstered sofa form to make reminders tangible, understandable and easy to respond to.","question":"How can a familiar piece of furniture encourage movement without taking control away from its user?","myrole":"Concept development, prototype planning, hands-on construction, electronics assembly and on-site testing within a group.","approach":[["01 / BEHAVIOUR","Start with an everyday habit","Long periods of sitting are easy to overlook. Rather than adding another phone reminder, we considered how a physical object might communicate directly through its existing form."],["02 / BUILD","From small furniture to working parts","The prototype brought together an upholstered exterior, a handmade supporting structure, pressure sensing and servo-based movement. Building the hardware exposed practical limits that could not be resolved through sketches alone."],["03 / TEST","Making feedback noticeable, not disruptive","We explored timing and feedback through physical movement and an audible alert. Testing highlighted the importance of control, reliability and allowing a person to continue resting if they choose."]],"images":[["move_teddy","MOVE prototype displayed with a teddy bear","span-wide"],["move_couch","Upholstered physical seating prototype",""],["move_electronics","Back-of-prototype electronics and servo assembly",""],["move_sketch","Early concept exploration and prototyping reflections","span-wide"]],"outcome":"An upholstered, sensor-driven furniture prototype with motorised feedback and a supporting reminder interaction, demonstrated through an exhibition-style scenario.","learning":"The biggest lesson was that translating an interaction into an actual object changes the design questions. Materials, assembly, sensing and human comfort all affect whether the idea makes sense outside a concept drawing.","link":"","theme":"amber"},{"slug":"receipts-of-relationships","title":"Receipts of Relationships","line":"Can a relationship have a price?","category":"INSTALLATION ART / DATA PHYSICALISATION","year":"2026","scope":"INDIVIDUAL CREATIVE INSTALLATION","disciplines":"Data / Critical design / Installation","hero":"receipt_install","hero_position":"center 45%","teaser":"An intimate human experience translated into the language of transactions.","abstract":"Receipts of Relationships questions what happens when personal human contact is recorded like a transaction. Over four days, I documented 40 meaningful conversations and translated them into physical thermal-paper receipts, each marking a moment through time, coded identity, emotion and an estimated effect on my mood.","question":"What is lost when complex relationships become simplified, measurable data?","myrole":"Concept, personal data collection, custom receipt interface, printing system and physical installation.","approach":[["01 / RECORD","Forty moments across four days","I recorded selected conversations and coded the identity of each participant to preserve privacy. Each interaction received an emotional marker and a subjective value from \u221210 to +10."],["02 / TRANSLATE","An everyday object with another meaning","A thermal receipt is usually evidence of a purchase. I used that familiar commercial format to question the idea of measuring a social connection and assigning it a systemic \u201cprice\u201d."],["03 / INVITE","The audience reconstructs the story","Printed receipts hung in long vertical sequences. Visitors were invited to read, touch and move among them, and to generate their own record using the accompanying software."]],"images":[["receipt_install","Installation view / suspended timeline of thermal receipts","span-wide"],["receipt_printer","Computer interface, printer and physical receipts",""],["receipt_close","The temporary archive of printed interactions",""]],"outcome":"An interactive physical installation built around a thermal printer, digital recording interface and hanging layers of receipts that visitors can read, touch and reorder.","learning":"The receipts look precise, but their values are inherently subjective. The material also fades and curls over time. That tension made the work more powerful: no single data point captures the whole of a relationship.","link":"","theme":"warm"},{"slug":"first-moments-matter","title":"First Moments Matter","line":"An arrival can mean more than a destination.","category":"CAMPAIGN IDENTITY / VISUAL COMMUNICATION","year":"2026","scope":"INDIVIDUAL UNIVERSITY CAMPAIGN CONCEPT","disciplines":"Brand strategy / Campaign identity / Physical applications","hero":"fmm_poster","hero_position":"center 34%","teaser":"Designing a warmer first impression for international arrivals in Auckland.","abstract":"First Moments Matter is a proposed campaign for Auckland Airport focused on the emotional significance of arrival. Developed for first-time international visitors, it combines welcoming language, a distinct campaign identity and applications across physical, environmental and digital touchpoints.","question":"How can arriving somewhere unfamiliar feel warmer, clearer and more reassuring?","myrole":"Research, campaign concept, visual identity, editorial guidelines, digital applications and physical merchandise development.","approach":[["01 / UNDERSTAND","The emotions of arriving","An unfamiliar airport can be exciting and exhausting at once. I focused on the reassurance and sense of belonging people need when they first arrive, rather than only the functional journey."],["02 / DEFINE","An identity that complements AKL","I gave the campaign its own voice while maintaining Auckland Airport as the endorsing brand. Warm natural colours, a clear type hierarchy and flowing journey forms communicate arrival and connection."],["03 / APPLY","Bringing the identity into everyday touchpoints","I developed campaign graphics, website applications, environmental placements and a sewn merchandise prototype to test how the campaign works beyond a single poster."]],"images":[["fmm_poster","Campaign hero advertisement / First Moments Matter",""],["fmm_brand","Final campaign identity and endorsed brand structure",""],["fmm_pouch_front","Handmade promotional pouch / front embroidery",""],["fmm_pouch_back","Handmade promotional pouch / reverse embroidery",""],["fmm_early","Early typographic and identity exploration",""],["fmm_screens","Physical, digital and environmental campaign touchpoints",""],["fmm_stitching","Experimenting with the construction of the campaign merchandise",""]],"outcome":"A proposed Auckland Airport campaign with a campaign identity system, advertising, environmental and digital applications, and a handmade promotional merchandise prototype.","learning":"Working on this campaign taught me to balance a new creative identity with an existing organisation. Strong visuals only work when hierarchy and real applications support the message and the experience of the audience.","link":"","theme":"sage"}];
+const portfolioExtras=[];
+
+const additionalPortfolioProjects=[{"slug":"bubble-tea-lamp","title":"Bubble Tea Lamp","line":"Designing a shopfront identity through light and making.","category":"PHYSICAL PRODUCT / STAKEHOLDER-LED DESIGN","year":"Earlier practice","scope":"INDIVIDUAL / STAKEHOLDER BRIEF","disciplines":"Product design / Workshop practice / Material exploration / Electronics","hero":"bubble_lamp_hero","hero_position":"center 45%","teaser":"A full-scale decorative lamp for a bubble tea shop, developed through hands-on fabrication and stakeholder feedback.","abstract":"This project began with a brief from a bubble tea shop in Highland Park, Auckland: design a striking decorative feature for the shop entrance, inspired by a street lamp, to invite attention and create a photo opportunity. I explored bubble-tea-inspired forms and brought together material selection, structural fabrication, electrical considerations and workshop techniques to turn the brief into a physical prototype.","question":"How can a functional-looking street lamp become a distinctive, bubble-tea-inspired feature for a real shop?","myrole":"Independent research, stakeholder discussion, concept sketching, material decisions, workshop fabrication, assembly and prototype evaluation.","approach":[["01 / UNDERSTAND","Work with a real stakeholder","I began by discussing the shop’s needs, display location, approximate height, electrical supply and safety requirements. I looked at street lamps, decorative lighting and forms inspired by tapioca pearls and drink cups."],["02 / EXPLORE","Turn workshop knowledge into decisions","I compared alternative lamp forms, developed sketches and researched the safe use of workshop machinery and fabrication methods. The challenge was not simply drawing an object, but finding ways to cut, form, join and support the materials."],["03 / MAKE & EVALUATE","Build a full-scale proof of concept","I built a standing lamp prototype using a long supporting pole and a customised upper housing. The outcome helped me identify issues with shaping the housing, organising electrical components and making the design easier to service."]],"images":[["bubble_lamp_hero","Final assembled prototype / a playful shopfront lighting feature","span-wide"],["bubble_lamp_brief","Stakeholder requirements, precedents and initial moodboard",""],["bubble_lamp_sketches","Shape exploration: pearls, cups and different lamp typologies",""],["bubble_lamp_making","Hands-on workshop process / shaping and preparing structural components",""],["bubble_lamp_safety","Workshop preparation and research into machinery and safety",""],["bubble_lamp_outcome","Early full-scale assembly and evaluation in the workshop",""],["bubble_lamp_review","Post-build evaluation and lessons about fabrication limits",""]],"outcome":"A large, standing decorative prototype developed from a stakeholder brief, supported by research, material exploration, workshop experimentation and final evaluation.","learning":"This was a turning point in learning to connect creative ideas with industrial skills. A compelling concept means little unless its structure, electrical components, maintenance and fabrication methods can work together. I also learned to respond to the practical constraints of a stakeholder rather than designing only for my own preferences.","theme":"amber","tags":["product","innovation"]},{"slug":"watch-stand","title":"Watch Stand","line":"My first step into product design.","category":"PRODUCT DESIGN / INDUSTRIAL PROCESS","year":"Early product practice","scope":"INDIVIDUAL PRODUCT DESIGN PROJECT","disciplines":"Product development / Material selection / Assembly / Prototyping","hero":"watch_hero","hero_position":"center center","teaser":"An early product-design project exploring the full journey from a functional brief to a crafted physical object.","abstract":"The Watch Stand was my first project focused on product design. Rather than treating a finished object as the only goal, I used the project to understand how a product moves through a real development process: defining its purpose, selecting materials, considering scale and ergonomics, constructing components and assessing the result in use. The final stand combines a wooden storage base, metal supports and leather-covered forms.","question":"How can a simple everyday product teach the decisions and discipline behind an industrial design workflow?","myrole":"Individual concept development, materials and construction planning, hands-on fabrication, assembly and final evaluation.","approach":[["01 / DEFINE","Start with a practical use","I explored how watches could be stored and displayed on a compact desktop object while keeping the form straightforward and approachable."],["02 / DEVELOP","Consider materials and construction","I worked with a combination of wood, metal and leather-like surfaces, thinking about how different components should support, protect and connect with each other."],["03 / REALISE","Complete the product journey","The prototype helped me experience the full sequence of developing, making and testing an object, not just producing a drawing or a visual mock-up."]],"images":[["watch_hero","Finished Watch Stand / wood base, metal supports and upholstered contact surfaces","span-wide"],["watch_in_use","Testing the stand with a real watch / scale, stability and use","span-wide"]],"outcome":"A tangible desktop watch stand with two supports and a drawer-style wooden base, designed to protect and present personal accessories.","learning":"This early project introduced me to the realities of the product design process. Small decisions about proportion, material thickness, finishing and assembly all affect the quality of the final outcome. It helped establish my interest in making, not just modelling.","theme":"warm","tags":["product"]},{"slug":"pouring-medium-studies","title":"Pouring Medium Studies","line":"Exploring materials through curiosity and experimentation.","category":"MATERIAL EXPERIMENT / PAINTING & MIXED MEDIA","year":"Earlier visual practice","scope":"INDIVIDUAL MATERIAL RESEARCH & ARTWORK","disciplines":"Pouring medium / Painting / Mixed media / Material exploration","hero":"pouring_hero","hero_position":"center center","teaser":"A series of bubble-tea-inspired visual explorations focused on pouring medium, material mixing and layered visual effects.","abstract":"This body of work explores how pouring medium behaves when it is blended and layered with other creative materials. Using bubble tea as a visual starting point, I tested differences in flow, thickness, surface texture and colour relationships, then brought those discoveries into mixed-media compositions, illustrations and larger experimental presentation boards. The process mattered as much as the final paintings.","question":"How can experimenting with material behaviour produce visual outcomes that are difficult to achieve through conventional drawing alone?","myrole":"Independent material tests, visual research, experimental painting, mixing and layering media, and composition development.","approach":[["01 / INVESTIGATE","Study the medium","I explored the behaviour of pouring medium and tested how adjusting combinations with other materials changed its movement, surface appearance and ability to create continuous shapes."],["02 / EXPERIMENT","Build unexpected textures","I combined painted and drawn elements with fluid textures, letting colour transitions, layered surfaces and accidents influence the direction of each composition."],["03 / COMPOSE","Bring the experiments together","I used bubble tea as the shared subject and assembled experimental results into a wider visual narrative across the final artwork and display boards."]],"images":[["pouring_hero","Close-up artwork / a study in surface, colour and mixed media","span-wide"],["pouring_board1","Material and illustration experiments developed around everyday food and drink",""],["pouring_board2","Bubble-tea-inspired final presentation / multiple paintings and fluid forms",""]],"outcome":"A series of material-led paintings and two presentation boards combining bubble-tea imagery, observational illustration, fluid colour, texture and mixed media.","learning":"Working experimentally reminded me that a material is not just a passive medium. How it flows, combines, dries and reacts can contribute ideas of its own. These tests broadened the way I think about form and composition, including in physical product design.","theme":"violet","tags":["branding","innovation"]},{"slug":"jpop-music-festival","title":"J-POP Music Festival","line":"An original event concept built into a visual world.","category":"EVENT CONCEPT / VISUAL COMMUNICATION","year":"Earlier visual practice","scope":"INDIVIDUAL ORIGINAL EVENT CONCEPT","disciplines":"Event concept / Visual identity / Illustration / Graphics / Merchandise","hero":"jpop_hero","hero_position":"center center","teaser":"An original Japanese-pop-music event concept brought to life through a full range of communication and event materials.","abstract":"J-POP Music Festival is an original event concept that I developed and translated into a coordinated visual experience. Rather than focusing on a single poster, I built a larger design system, combining research, identity experiments, illustrations, promotional graphics, merchandise, staff credentials and event-space applications. The final presentation shows how these different design disciplines could work together as a single festival identity.","question":"How can one event idea develop a consistent identity across advertising, people, products and spaces?","myrole":"Original event concept, research and creative direction, visual identity exploration, illustration, campaign artwork and multi-format event applications.","approach":[["01 / IMAGINE","Create the event","I developed the festival premise and researched a youthful visual language around Japanese pop music, live performance and event culture."],["02 / DESIGN","Develop a consistent graphic voice","I tested poster compositions, illustration styles, lettering, imagery and colour variations to find a recognisable look across many formats."],["03 / EXTEND","Design beyond the poster","I explored staff passes, lanyards, packaging, cups, stalls and other applications, bringing brand identity and event planning together in one presentation."]],"images":[["jpop_hero","Original J-POP Festival concept / full multi-format presentation board","span-wide"]],"outcome":"A complete concept presentation including festival positioning, explorations, posters, character illustrations, staff lanyards and supporting event merchandise and environment applications.","learning":"The main challenge was building cohesion across different scales and disciplines. This project helped me see how illustration, event thinking and visual communication can support a shared experience, rather than competing for attention.","theme":"violet","tags":["branding","innovation"]}];
+
+const originalProjectImages = Object.fromEntries(["random_illustration_sheet", "tote_design_screen", "tote_machine", "tote_panels", "tote_back", "lighting_final_v13", "lighting_detail_v13", "lighting_process_v13"].map(k=>[k,portfolioAssets[k]]));
+/* V13 content update */
+Object.assign(portfolioAssets,{"echo_concept_v13":"assets/media_055_34796ed9777184.webp","dog_board_full":"assets/media_056_59fa6ce6ea791b.webp","dog_board_right":"assets/media_057_0f552475d638ff.webp","dog_board_center":"assets/media_058_65e6064cad350c.webp","dog_board_left":"assets/media_059_b3492125362761.webp","furry_tale_board":"assets/media_060_ac0dc61a4e2b6f.webp","tote_design_screen":"assets/media_061_53079d0fa0a3bd.webp","tote_machine":"assets/media_062_0eb481b1eba51b.webp","tote_panels":"assets/media_063_5de8d31c264151.webp","tote_side":"assets/media_064_003711e1b8d03c.webp","tote_back":"assets/media_065_e496f02bda2e18.webp","random_illustration_sheet":"assets/media_066_f806ea24b1ce7b.webp","lighting_board_v13":"assets/media_067_8dc26f1f254475.webp","lighting_process_v13":"assets/media_068_e1e52ebee058ad.webp","lighting_final_v13":"assets/media_069_2c8a6da33eb355.webp","lighting_detail_v13":"assets/media_070_3d5232b79f3ea5.webp"});
+Object.assign(portfolioAssets,originalProjectImages);
+const echoProjectV13=portfolioProjects.find(p=>p.slug==="echo-hollow");
+if(echoProjectV13){
+ echoProjectV13.hero='echo_concept_v13';
+ echoProjectV13.hero_position='center center';
+ echoProjectV13.images=[
+  ['echo_concept_v13','Concept rendering showing Echo Hollow as a public message-sharing installation.','span-wide'],
+  ['echo_models','Six physical form studies and 3D-printed model explorations.','span-wide'],
+  ['echo_poster','Project communication and the central idea of a tree for human connection.','span-tall'],
+  ['echo_cards','A6 question-card designs supporting the handwritten interaction.','span-tall'],
+  ['echo_interaction','Interaction and device proposals, from writing to digital sharing.','span-tall'],
+  ['echo_site','Companion website: online community and message archive.','span-tall'],
+  ['echo_exhibition','Installation / exhibition presentation and physical model outcomes.','span-wide'],
+  ['echo_locations','Context studies for public-space installation scenarios.','span-tall']
+ ];
+};
+additionalPortfolioProjects.push(...[{"slug":"across-distance","title":"Across Distance","tagline":"A personal mixed-media board about travel, separation and the memory of home.","category":"PERSONAL NARRATIVE / MIXED MEDIA","year":"Earlier Practice","scope":"INDIVIDUAL ART BOARD","disciplines":"Painting / Mixed media / Personal storytelling","hero":"dog_board_full","hero_position":"center top","question":"How can I translate my experience of studying abroad and being separated from my dog into a visual story?","role":"Concept development, painting, composition building and material experimentation.","period":"Earlier studio practice","team":"Individual project","summary":"This board turns a very personal experience into imagery. The Shiba Inu is my own dog, and the work reflects the distance created by studying overseas. Airports, luggage, travel symbols and the dog become a way to talk about separation, memory and connection.","process":"I used multiple materials and image-making methods across the board rather than staying with one visual language. The project let me test composition, scale and transitions between small framed scenes and larger narrative moments. It also became a way to experiment with how personal content can still feel structured and visually coherent.","outcome":"The result is both autobiographical and exploratory. It strengthened my confidence in combining drawing, painting and material variation, while showing how my own life can become the basis of a more layered visual project.","images":[["dog_board_full","Full project board presenting the overall narrative.","span-wide"],["dog_board_paintings","Mixed-media detail studies: dog, airport and travel-related painted scenes.","span-wide"],["dog_board_left","Close-up study focused on the dog figure and personal emotional tone.","span-tall"],["dog_board_center","Central sequence linking personal memory with imaginative visual scenes.","span-tall"],["dog_board_right","Right panel focusing on separation, suspended luggage and the Shiba figure.","span-wide"]],"tags":["exploration"],"line":"A personal narrative of home, travel and separation, told through painting and mixed media.","teaser":"Personal memories of my Shiba Inu, framed by the distance created through studying overseas.","abstract":"This board turns a very personal experience into imagery. The Shiba Inu is my own dog, and the work reflects the distance created by studying overseas. Airports, luggage, travel symbols and the dog become a way to talk about separation, memory and connection.","myrole":"Concept development, painting, composition building and material experimentation.","learning":"This work helped me use my own experience as a meaningful design starting point while testing how material, scale and composition communicate different parts of a story.","theme":"warm","approach":[["01 / PERSONAL CONTEXT","An experience across places","Studying away from home meant being separated from my own Shiba Inu. I translated that lived experience into the visual language of travel, airports, luggage and memory."],["02 / EXPERIMENT","Mixing materials and techniques","I combined drawing, painting and mixed-media composition, exploring different textures and scales instead of relying on a single illustration technique."],["03 / COMPOSITION","Building one narrative from many scenes","The final board balances small framed studies with larger images, allowing the viewer to move between specific memories and the wider emotional experience."]]},{"slug":"furry-tale","title":"Furry Tale","tagline":"A softer commercial identity exploring the emerging field of pet memorial services.","category":"BRANDING / VISUAL COMMUNICATION","year":"Earlier Practice","scope":"INDIVIDUAL BRAND CONCEPT","disciplines":"Brand identity / Editorial / UI / Packaging","hero":"furry_tale_board","hero_position":"center top","question":"How might visual design make an emotionally difficult service feel more approachable, clear and commercially viable?","role":"Research, concept framing, brand identity, collateral design and system development.","period":"Earlier design practice","team":"Individual project","summary":"Furry Tale looks at pet memorial care as an emerging service area. I approached it through a full visual system rather than a single graphic outcome, combining brand marks, poster design, publication spreads, badges and website applications.","process":"The key challenge was balancing sensitivity with market clarity. I explored a friendlier illustrated tone and a pastel visual system so the topic would feel caring rather than intimidating. From there I built the project into a broader commercial proposition, testing how the identity could work across editorial, merchandise and digital touchpoints.","outcome":"This project pushed me closer to commercial graphic design. It showed that I can structure a brand world around a socially and emotionally complex topic while keeping the result coherent, approachable and presentable in a business context.","images":[["furry_tale_board","Full presentation board showing the brand system and applications.","span-wide"]],"tags":["branding"],"line":"Building a sensitive visual identity for pet remembrance and an emerging service market.","teaser":"An illustrated identity and collection of applications balancing care, clarity and business needs.","abstract":"Furry Tale looks at pet memorial care as an emerging service area. I approached it through a full visual system rather than a single graphic outcome, combining brand marks, poster design, publication spreads, badges and website applications.","myrole":"Research, concept framing, brand identity, collateral design and system development.","learning":"The project improved my ability to translate a complex topic into a coherent commercial design system, with different applications supporting one consistent brand identity.","theme":"violet","approach":[["01 / RESEARCH","A sensitive emerging service","I explored pet memorial services as a developing area where practical business considerations and emotional experiences need to be understood together."],["02 / IDENTITY","An approachable visual language","I experimented with illustrated characters, gentle colours, typography and consistent graphic elements to communicate remembrance without an overly formal tone."],["03 / APPLICATION","A connected brand system","I tested the identity across posters, publications, badges, packaging concepts and website screens to consider how the service could appear in different contexts."]]},{"slug":"belonging-tote","title":"Threads of Belonging","tagline":"An upcycled tote bag combining reclaimed material with Chinese-inspired pattern and symbolism.","category":"SUSTAINABLE OBJECT / TEXTILE EXPERIMENT","year":"Earlier Practice","scope":"INDIVIDUAL MATERIAL PROJECT","disciplines":"Upcycling / Sewing / Embroidery / Product making","hero":"tote_front","hero_position":"center center","question":"How can a simple everyday object express belonging, sustainability and cultural identity at the same time?","role":"Concept development, motif digitising, embroidery setup, sewing and assembly.","period":"Earlier making practice","team":"Individual project","summary":"This tote bag project uses reclaimed denim as the main material and combines it with a Chinese-inspired emblem and surface language. The work is both functional and symbolic: it reuses old material while turning the bag into a small statement about identity and belonging.","process":"I first developed the motif digitally for embroidery, then tested the stitch setup on fabric, prepared the denim panels and assembled the bag. Keeping visible seams, repurposed pocket details and the strong embroidered patch helped the object feel honest about its recycled origin rather than hiding it.","outcome":"The project became an early example of how I like to work across product, craft and meaning. It shows my interest in sustainability, material reuse and making objects that hold personal and cultural significance.","images":[["tote_machine","Embroidery process underway on the machine.","span-tall"],["tote_panels","Cut and prepared reclaimed denim pieces before assembly.","span-wide"],["tote_front","Finished tote / front view with embroidered emblem.","span-tall"],["tote_back","Finished tote / alternate angle showing the pocket detail and overall form.","span-tall"]],"tags":["product","exploration"],"line":"Reclaiming denim and reinterpreting Chinese-inspired motifs through embroidery and making.","teaser":"An everyday object assembled from reclaimed denim and detailed with meaningful embroidery.","abstract":"This tote bag project uses reclaimed denim as the main material and combines it with a Chinese-inspired emblem and surface language. The work is both functional and symbolic: it reuses old material while turning the bag into a small statement about identity and belonging.","myrole":"Concept development, motif digitising, embroidery setup, sewing and assembly.","learning":"I learned how upcycling, textile craft and visual identity can work together in an everyday object, rather than treating sustainable material choices as a separate design concern.","theme":"warm","approach":[["01 / MATERIAL","Begin with what exists","I chose reclaimed denim and considered how previous seams and pockets could become features rather than material to conceal."],["02 / CULTURE","Translate identity into a motif","I explored Chinese-inspired patterns and prepared a personal emblem for machine embroidery, moving the design between digital artwork and fabric."],["03 / ASSEMBLY","A useful object with a story","I prepared panels, experimented with embroidery and constructed a functional tote whose reused fabric and graphic details both contribute to its character."]]},{"slug":"random-pattern-illustrations","title":"Illustrations from Chance","tagline":"A playful illustration series created by transforming random shapes into characters and scenes.","category":"ILLUSTRATION / CREATIVE EXPERIMENTATION","year":"Earlier Practice","scope":"INDIVIDUAL ILLUSTRATION SERIES","disciplines":"Illustration / Character design / Visual experimentation","hero":"random_illustration_sheet","hero_position":"center center","question":"What happens when random forms become the starting point for a structured illustration process?","role":"Visual ideation, form transformation and character creation.","period":"Earlier illustration practice","team":"Individual project","summary":"This series begins with arbitrary shapes and turns them into expressive creatures and figures. Instead of drawing from a fixed brief, I used randomness as the engine of the work, letting unusual silhouettes suggest character, behavior and personality.","process":"By repeatedly interpreting and adapting unexpected forms, I explored how constraint can generate variety. The project sharpened my sensitivity to silhouette, rhythm and visual humor, while also giving me a flexible method for generating original ideas quickly.","outcome":"The outcome is a lively bank of characters with a shared graphic language but distinct personalities. It reflects a more experimental side of my practice and demonstrates how playful systems can still produce intentional visual results.","images":[["random_illustration_sheet","Original concept sheet showing characters developed from random forms.","span-wide"]],"tags":["exploration"],"line":"Transforming unexpected shapes into distinctive characters and playful narratives.","teaser":"A playful collection created through open-ended visual experimentation.","abstract":"This series begins with arbitrary shapes and turns them into expressive creatures and figures. Instead of drawing from a fixed brief, I used randomness as the engine of the work, letting unusual silhouettes suggest character, behavior and personality.","myrole":"Visual ideation, form transformation and character creation.","learning":"This series reminded me that experimentation and open-ended illustration can expand how I generate ideas before a brief becomes too restrictive.","theme":"violet","approach":[["01 / CHANCE","Start without a fixed subject","I used unexpected shapes and marks as starting points, allowing each composition to suggest a different direction."],["02 / TRANSFORMATION","Find a character in the shape","I developed the abstract forms into characters and small scenes, using visual rhythm, contrast and personality to build coherence."],["03 / SERIES","Connect unrelated experiments","The resulting images work together as a collection that reflects playful iteration, even when individual characters and outcomes differ."]]},{"slug":"lighting-design","title":"Form, Light & Circuit","tagline":"An early project where precision making, structure and basic circuitry began to connect.","category":"PRODUCT / LIGHTING / ENGINEERING","year":"Earlier Practice","scope":"INDIVIDUAL FUNCTIONAL PROTOTYPE","disciplines":"Laser cutting / Model making / Circuits / Product development","hero":"lighting_final_v13","hero_position":"center center","question":"How can a flat-cut construction become a functioning illuminated object through structure and circuit thinking?","role":"Concept ideation, pattern development, laser cutting, soldering, assembly and refinement.","period":"Earlier prototyping practice","team":"Individual project","summary":"This project marked the beginning of my interest in more precise engineering logic. I developed a character-like lamp through iterative drawing, card modelling, laser-cut parts and a simple electrical system, combining playful form with functional making.","process":"The work moved through ideation sketches, papermodel tests, digital cutting files, structural refinement and basic soldering. A big part of the learning was understanding how separate flat parts, wiring and light placement could come together into a stable final object.","outcome":"It was an important starting point for me because it linked craft and engineering. The finished lamp demonstrates early confidence in detailed fabrication, assembly logic and circuitry, and it laid groundwork for the more technical product projects that came later.","images":[["lighting_final_v13","Illuminated physical prototype and final form.","span-wide"],["lighting_detail_v13","Laser-cut parts and construction details before full assembly.","span-wide"]],"tags":["product"],"line":"An early exploration of precise fabrication, assembly and basic electronics through an illuminated object.","teaser":"A functional lighting object made through digital preparation, physical assembly and a basic circuit.","abstract":"This project marked the beginning of my interest in more precise engineering logic. I developed a character-like lamp through iterative drawing, card modelling, laser-cut parts and a simple electrical system, combining playful form with functional making.","myrole":"Concept ideation, pattern development, laser cutting, soldering, assembly and refinement.","learning":"This was an important early step toward working with physical products and electronics. I learned how precision, material tolerances and assembly affect whether a seemingly simple idea works.","theme":"amber","approach":[["01 / CONCEPT","From character to light object","I began with a playful character-inspired lamp and explored how the form could be expressed through precisely cut components."],["02 / PROTOTYPING","Develop the parts and assembly","I tested the layered structure, material cuts and fit of the components, using digital preparation and physical assembly to resolve details."],["03 / ELECTRONICS","Make the object illuminate","The final prototype combined the constructed form with a simple lighting circuit, introducing practical decisions about wiring and functionality."]]}]);
+/* End V13 content update */
+const featuredSlugs=['echo-hollow','move-smart-couch','receipts-of-relationships','first-moments-matter'];
+const curatedProjectOrder=["echo-hollow", "move-smart-couch", "receipts-of-relationships", "bubble-tea-lamp", "first-moments-matter", "watch-stand", "belonging-tote", "lighting-design", "furry-tale", "jpop-music-festival", "across-distance", "pouring-medium-studies", "random-pattern-illustrations"];
+const allPortfolioData=curatedProjectOrder.map(slug=>[...portfolioProjects,...additionalPortfolioProjects].find(p=>p.slug===slug)).filter(Boolean);
+const projectCategories={"echo-hollow":["interactive"],"move-smart-couch":["product","interactive"],"receipts-of-relationships":["interactive","exploration"],"bubble-tea-lamp":["product"],"first-moments-matter":["branding"],"watch-stand":["product"],"belonging-tote":["product","exploration"],"lighting-design":["product"],"furry-tale":["branding"],"jpop-music-festival":["branding"],"across-distance":["exploration"],"pouring-medium-studies":["exploration"],"random-pattern-illustrations":["exploration"]};
+function chooseBySlug(slug){return allPortfolioData.find(p=>p.slug===slug)}
+function portfolioCard(p,i){
+ let slug=p.slug,main=featuredSlugs.includes(slug);
+ let img=p.hero&&portfolioAssets[p.hero] ? `<img loading="lazy" src="${portfolioAssets[p.hero]}" alt="${p.title} project image" />`: `<span>PROJECT / ${String(i+1).padStart(2,'0')}</span>`;
+ let kind=p.category||p.kind||'DESIGN PROJECT';
+ return `<a href="#project/${slug}" class="featured-card project-card" data-project="${slug}" data-tags="${(projectCategories[p.slug]||[]).join(' ')}" aria-label="View ${p.title} project details"><div class="featured-image">${img}<span class="frame-count">VIEW PROJECT &nbsp; ↗</span></div><div class="featured-info"><small>${String(i+1).padStart(2,'0')} / ${kind}</small><h3>${p.title}</h3><p>${p.teaser||p.description||''}</p></div></a>`;
+}
+// Preserve the original V10 layout; change the empty cards into clickable project previews.
+document.getElementById('featuredProjects').innerHTML=featuredSlugs.map((slug,i)=>portfolioCard(chooseBySlug(slug),i)).join('');
+document.getElementById('allProjects').innerHTML=allPortfolioData.map((p,i)=>portfolioCard(p,i)).join('');
+document.querySelector('.archive-note').textContent='Select any project to read its own case study. Images open at a larger size for closer inspection.';
+const countIndicator=document.getElementById('projectCount');if(countIndicator)countIndicator.textContent=allPortfolioData.length+' PROJECTS';
+function mediaBlock(tuple){
+ const [asset,caption,span]=tuple;
+ const src=portfolioAssets[asset];
+ if(!src){return `<figure class="project-media image-unavailable"><div class="project-photo-shell">Image unavailable: ${asset}</div><figcaption>${caption}</figcaption></figure>`}
+ return `<figure class="project-media ${span||''}" data-asset="${asset}"><button class="project-image-button" type="button" data-view-image="${asset}" aria-label="Expand image: ${caption}"><div class="project-photo-shell"><img src="${src}" alt="${caption}" loading="lazy" /><span class="zoom-hint" aria-hidden="true">EXPAND IMAGE +</span></div></button><figcaption>${caption}</figcaption></figure>`;
+}
+
+const moveFilmPoster="assets/media_071_e38818c4bdae72.jpg";
+const moveFilmUrl="assets/media_072_8e3d6b192e9ebf.mp4";
+function projectScreen(p){
+ const index=allPortfolioData.findIndex(x=>x.slug===p.slug);
+ const meta=[[p.year==='2026'?'YEAR':'PERIOD',p.year],['PROJECT ROLE',p.scope],['PRACTICE',p.disciplines],['MY CONTRIBUTION',p.myrole]];
+ const isPortrait=p.slug==='first-moments-matter';
+ const steps=p.approach.map(([number,title,desc])=>`<article class="project-step"><small>${number}</small><h3>${title}</h3><p>${desc}</p></article>`).join('');
+ let pictures=p.images.map(mediaBlock).join('');
+ let onward=allPortfolioData[(index+1)%allPortfolioData.length];
+ let link=p.link?`<a class="project-live" href="${p.link}" target="_blank" rel="noopener noreferrer">${p.linklabel||'OPEN PROJECT WEBSITE'} ↗</a>`:'';
+ return `<div class="wrap">
+   <div class="project-topnav"><button class="project-link" data-close-project>← BACK TO ALL PROJECTS</button><span class="project-index">${index<4?'SELECTED WORK':'PROJECT ARCHIVE'} &nbsp; / &nbsp; ${String(index+1).padStart(2,'0')} — ${String(allPortfolioData.length).padStart(2,'0')}</span></div>
+   <section class="project-hero"><div><div class="project-eyebrow">${p.category} &nbsp; / &nbsp; ${p.year}</div><h1 class="project-big-title">${p.title}</h1><div class="project-headline">${p.line}</div><p class="project-teaser">${p.teaser}</p><div class="project-eyebrow" style="margin-top:35px">TONY XU / DESIGN PRACTICE</div></div><div class="project-hero-visual ${isPortrait?'portrait':''}"><img src="${portfolioAssets[p.hero]}" style="object-position:${p.hero_position}" alt="${p.title} — primary project image" /></div></section>
+   <dl class="project-metadata">${meta.map(([l,v])=>`<div><dt>${l}</dt><dd>${v}</dd></div>`).join('')}</dl>
+   <section class="project-section"><div class="project-section-label">01 / PROJECT OVERVIEW</div><div class="project-intro-grid"><div><h2>The idea behind<br>the project.</h2><p class="project-prose">${p.abstract}</p>${link}</div><div class="project-aside"><small>FOCUS / DESIGN QUESTION</small><p>${p.question}</p><small>FORMAT</small><p>${p.scope}</p></div></div></section>
+   <section class="project-section"><div class="project-section-label">02 / CENTRAL QUESTION</div><div class="project-question project-focus">${p.question}<span class="accent-mark"> ↗</span></div></section>
+   <section class="project-section"><div class="project-section-label">03 / DESIGN & DEVELOPMENT</div><h2>From thinking<br>to making.</h2><div class="project-step-grid">${steps}</div></section>
+   <section class="project-section"><div class="project-section-label">04 / VISUAL DOCUMENTATION</div><h2>Process &amp; outcomes.</h2><div class="project-gallery">${pictures}</div></section>
+   ${p.slug==='move-smart-couch'?`<section class="project-section project-film-section"><div class="project-section-label">05 / PROJECT LAUNCH VIDEO</div><h2>MOVE, in motion.</h2><p class="project-film-desc">A short launch film documenting the MOVE concept, physical prototype and supporting app experience.</p><div class="project-video-shell"><video controls playsinline preload="metadata" poster="${moveFilmPoster}" aria-label="MOVE project launch film"><source src="${moveFilmUrl}" type="video/mp4">Your browser does not support HTML5 video. <a href="${moveFilmUrl}" download="MOVE_Launch_Film.mp4">Download the film</a>.</video></div><div class="project-film-footnote"><span>PROJECT LAUNCH FILM / 2026</span><span>01:55 · SOUND ON</span></div><a class="project-live project-download-video" href="${moveFilmUrl}" download="MOVE_Launch_Film.mp4">DOWNLOAD LAUNCH FILM ↓</a></section>`:''}
+   <section class="project-section"><div class="project-section-label">${p.slug==='move-smart-couch'?'06':'05'} / REFLECTION</div><div class="project-conclusion"><div><h3>What was created</h3><p>${p.outcome}</p></div><div><h3>What I learned</h3><p>${p.learning}</p></div></div></section>
+   <div class="project-footer"><button class="project-link" data-close-project>← ALL PROJECTS</button><button class="project-link" data-project="${onward.slug}">NEXT PROJECT &nbsp; ${onward.title} →</button></div>
+ </div>`;
+}
+function shortProjectScreen(p){return `<div class="wrap project-summary-view"><div class="project-topnav"><button data-close-project class="project-link">← BACK TO ALL PROJECTS</button><span class="project-index">PROJECT ARCHIVE / ADDITIONAL WORK</span></div><div class="project-section"><div class="project-eyebrow">${p.category}</div><h1 class="project-big-title">${p.title}</h1><p class="project-headline">${p.description}</p><p class="project-prose" style="max-width:800px;margin-top:45px">${p.note}</p><div style="margin-top:60px;border-top:1px solid #314761;padding-top:25px"><button class="project-link" data-close-project>← EXPLORE SELECTED PROJECTS</button></div></div></div>`}
+function routeToProject(slug,saveHistory=true){
+ const project=chooseBySlug(slug);if(!project)return;
+ setMenu(false);
+ const el=document.getElementById('projectView');
+ el.dataset.theme=project.theme||'blue';el.dataset.archive=featuredSlugs.includes(slug)?'false':'true';
+ el.innerHTML=project.images?projectScreen(project):shortProjectScreen(project);
+ document.body.classList.remove('archive-active','contact-active');
+ document.body.classList.add('project-active');
+ if(saveHistory)history.pushState(null,'',`#project/${slug}`);
+ window.scrollTo({top:0,behavior:'instant'});
+ document.title=`${project.title} — Tony Xu | Design Portfolio`;
+}
+const archiveBefore=showArchive,contactBefore=showContact,homeBefore=showHome;
+showArchive=function(){document.body.classList.remove('project-active');archiveBefore();document.title='All Projects — Tony Xu';};
+showContact=function(){document.body.classList.remove('project-active');contactBefore();document.title='About & Contact — Tony Xu';};
+showHome=function(hash){document.body.classList.remove('project-active');homeBefore(hash);document.title='Tony Xu — Design Portfolio';};
+function goArchiveFromProject(){showArchive()}
+document.addEventListener('click',e=>{
+ const link=e.target.closest('[data-project]');
+ if(link){e.preventDefault();routeToProject(link.dataset.project);return;}
+ if(e.target.closest('[data-close-project]')){e.preventDefault();goArchiveFromProject();return;}
+});
+function handleProjectHash(){
+ const h=decodeURIComponent(location.hash||'');
+ if(h.startsWith('#project/')){routeToProject(h.slice('#project/'.length),false);return;}
+ if(h==='#archive'){showArchive();return;}
+ if(h==='#contact-page'){showContact();return;}
+ if(document.body.classList.contains('project-active'))showHome(h==='#skills'?'#skills':null);
+}
+addEventListener('hashchange',handleProjectHash);addEventListener('popstate',handleProjectHash);
+handleProjectHash();
+</script>
+<script>
+(function(){
+  const dialog=document.createElement('dialog');dialog.className='image-zoom-dialog';dialog.setAttribute('aria-label','Project image viewer');
+  dialog.innerHTML='<div class="image-zoom-header"><p id="imageZoomCaption"></p><button class="image-zoom-close" type="button">CLOSE ×</button></div><figure><img id="imageZoomFull" alt="Expanded project documentation" /></figure><div class="image-zoom-meta">FULL IMAGE · PRESS ESC TO CLOSE</div>';
+  document.body.appendChild(dialog);
+  dialog.querySelector('.image-zoom-close').addEventListener('click',()=>dialog.close());
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-view-image]');if(!b)return;
+    const asset=b.getAttribute('data-view-image');const src=portfolioAssets[asset];if(!src)return;
+    const caption=b.closest('figure')?.querySelector('figcaption')?.textContent || 'Project image';
+    dialog.querySelector('#imageZoomCaption').textContent=caption;
+    dialog.querySelector('#imageZoomFull').src=src;
+    dialog.querySelector('#imageZoomFull').alt=caption;
+    if(!dialog.open)dialog.showModal();
+  });
+})();
+</script></body></html>
