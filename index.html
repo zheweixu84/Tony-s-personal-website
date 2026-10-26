@@ -353,6 +353,28 @@ body.project-active #projectView a:focus-visible, .project-card:focus-visible{ou
 .cv-outline-link span{font-size:19px;color:#76bdff;line-height:1}.cv-outline-link small{font-size:9px;color:#9fb7d4;border-left:1px solid #547292;padding-left:13px;white-space:nowrap}.cv-outline-link:hover{background:#1d4068;border-color:#8cc6ff}
 .cv-reach-detail{padding:22px 0}.cv-contact-button{display:inline-flex;justify-content:space-between;align-items:center;gap:16px;width:100%;font-size:12px;letter-spacing:.12em;padding:15px 16px;border-color:#5d97d9;background:#1d4268;text-decoration:none}.cv-contact-button span{font-size:18px;color:#7fbeff}.cv-contact-button:hover{background:#295784;color:#fff}
 @media(max-width:520px){.side-menu a.menu-cv-link{font-size:17px}.cv-outline-link{max-width:100%;flex-wrap:wrap}.about-actions{gap:18px}}
+
+/* Featured portfolio case study — one full-width editorial post after the opening flip */
+.case-feature{padding:42px 0 20px;background:linear-gradient(180deg,#07101f 0%,#080d17 100%);position:relative}
+.case-feature .wrap{width:min(1160px,calc(100% - 72px))}
+.case-feature-kicker{display:flex;align-items:center;gap:15px;font-size:10px;letter-spacing:.19em;color:#7cbaff;font-weight:800;margin:0 0 16px}
+.case-feature-kicker::after{content:'';height:1px;background:#284a6c;flex:1}
+.case-feature-card{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(220px,.85fr);min-height:236px;border:1px solid #3b638e;background:linear-gradient(119deg,#152e50,#0b1a2e 62%,#091423);color:#edf5ff;position:relative;overflow:hidden;transition:border-color .22s,transform .22s,box-shadow .22s}
+.case-feature-card:hover,.case-feature-card:focus-visible{border-color:#8ac9ff;transform:translateY(-3px);box-shadow:0 16px 45px #030a13a8;outline:none}
+.case-feature-copy{padding:30px clamp(24px,4vw,55px);position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center}
+.case-feature-tag{color:#80baff;font-size:10px;font-weight:800;letter-spacing:.2em;margin-bottom:15px}
+.case-feature-title{font-size:clamp(25px,3.2vw,46px);font-weight:850;letter-spacing:-.065em;line-height:1.08;margin:0 0 13px;color:#f7fbff;max-width:610px}
+.case-feature-description{font-size:13px;line-height:1.65;color:#b2c7de;margin:0 0 22px;max-width:600px}
+.case-feature-meta{display:flex;align-items:center;gap:18px;color:#83baff;font-size:10px;font-weight:750;letter-spacing:.13em}
+.case-feature-arrow{display:inline-grid;place-items:center;width:40px;height:40px;border:1px solid #6293c8;font-size:20px;color:#f2f8ff;margin-right:5px;transition:background .2s;flex:none}
+.case-feature-card:hover .case-feature-arrow{background:#29588e}
+.case-feature-visual{position:relative;min-width:0;overflow:hidden;border-left:1px solid #314d6c;background:#091c32}
+.case-feature-visual img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;object-position:50% 50%;filter:saturate(.88);transition:transform .45s}
+.case-feature-card:hover .case-feature-visual img{transform:scale(1.04)}
+.case-feature-visual::after{content:'DES221 / DESIGN PROCESS';position:absolute;right:0;bottom:0;background:#061221e5;color:#bbdcff;padding:12px 17px;font-size:10px;letter-spacing:.13em;font-weight:700}
+@media(max-width:780px){.case-feature .wrap{width:calc(100% - 36px)}.case-feature{padding:24px 0 15px}.case-feature-card{grid-template-columns:1fr}.case-feature-copy{padding:25px}.case-feature-visual{min-height:165px;border-left:0;border-top:1px solid #314d6c;order:-1}.case-feature-title{font-size:clamp(26px,7vw,38px)}}
+
+@media(max-width:520px){header nav>a:first-child{display:none}}
 </style></head>
 <body>
 <header><div class="wrap"><div class="identity"><a aria-label="Tony Xu — Home" class="logo tony-wordmark" href="#home" id="logoLink"><img src="assets/media_001_5dcc7a52eb1d9b.png" alt="Tony Xu logo" /></a></div><nav><a data-home-link="" href="#skills">Skills</a><a data-open-archive="" href="#archive">Projects</a><a data-open-contact="" href="#contact-page">About &amp; Contact</a><button aria-controls="sideMenu" aria-expanded="false" aria-label="Open secondary menu" class="menu-button" id="menuBtn"><span class="menu-lines"></span></button></nav></div></header>
@@ -550,6 +572,21 @@ body.project-active #projectView a:focus-visible, .project-card:focus-visible{ou
 <div class="scroll-cue" id="scrollCue">SCROLL TO EXPLORE ↓</div>
 </div>
 </div>
+
+<section class="case-feature" aria-label="Featured case study" id="caseStudyPost">
+ <div class="wrap">
+  <div class="case-feature-kicker">FEATURED POST <span aria-hidden="true">/</span> THE PROCESS BEHIND THIS WEBSITE</div>
+  <a class="case-feature-card" href="case-study.html" aria-label="Read Building My Digital Design Identity case study">
+   <div class="case-feature-copy">
+    <span class="case-feature-tag">NEW CASE STUDY &nbsp; / &nbsp; 2026</span>
+    <h2 class="case-feature-title">Building My Digital<br>Design Identity<span style="color:#6baeff">.</span></h2>
+    <p class="case-feature-description">From physical Sketch · Model · Make cards to an interactive portfolio. A closer look at the ideas, prototypes, AI-assisted development, revisions and decisions behind this website.</p>
+    <div class="case-feature-meta"><span class="case-feature-arrow" aria-hidden="true">↗</span><span>READ THE FULL CASE STUDY</span></div>
+   </div>
+   <div class="case-feature-visual"><img src="assets/case-site-cards.webp" alt="Tony Xu portfolio Sketch Model Make animation cards" loading="lazy"></div>
+  </a>
+ </div>
+</section>
 <section class="content" id="about"><div class="wrap about-grid"><div class="portrait-frame"><img alt="Portrait of Tony Xu" src="assets/media_002_afcadaba1110ec.jpg"/><span class="portrait-corner" aria-hidden="true"></span><div class="portrait-label"><span>TONY XU / PORTRAIT</span><span>2026</span></div></div><div><div class="section-label">01 / INTRODUCTION</div><h2 class="section-heading">About Me<span class="dot">.</span></h2><div class="about-text"><p>Hi, I'm Tony Xu, a Design student at the University of Auckland, New Zealand.</p><p>My interests lie in product design, physical prototyping, and interactive experiences. I enjoy exploring how creative ideas can be transformed into tangible products and experiences that people can see, touch, and interact with.</p><p>Through experimentation, 3D modelling, and hands-on making, I aim to <strong>bridge the gap between ideas and real-world experiences.</strong> Whether creating something entirely new or improving an existing design, my goal is to make technology and physical objects more engaging, accessible, and meaningful to people.</p></div><div class="about-actions"><a class="text-link" data-open-contact="" href="#contact-page">MORE ABOUT ME →</a><a class="cv-text-link" href="Tony_Xu_CV.pdf" download="Tony_Xu_CV.pdf">DOWNLOAD MY CV <span aria-hidden="true">↓</span></a></div></div></div></section>
 <section class="content" id="selected"><div class="wrap"><div class="section-label">02 / FEATURED WORK</div><div class="section-headline"><h2 class="section-heading">Selected Projects<span class="dot">.</span></h2><div class="section-subtitle">Selected work across product design, tangible interactions, installation and visual communication.</div></div><div class="feature-grid" id="featuredProjects"></div><div class="more"><button data-open-archive="">EXPLORE ALL PROJECTS →</button></div></div></section>
 <section class="content" id="skills"><div class="wrap"><div class="section-label">03 / CAPABILITIES</div><h2 class="section-heading">Skills<span class="dot">.</span></h2><div class="skills-groups"><div class="skill-group"><h3>DESIGN &amp; MAKING</h3><div class="skills-cloud"><span class="skill" tabindex="0">Product Design</span><span class="skill" tabindex="0">Physical Prototyping</span><span class="skill" tabindex="0">3D Modelling</span><span class="skill" tabindex="0">Interactive Installations</span><span class="skill" tabindex="0">Visual Communication</span><span class="skill" tabindex="0">Creative Experimentation</span><span class="skill" tabindex="0">Painting</span><span class="skill" tabindex="0">Photography</span><span class="skill" tabindex="0">Sketching &amp; Illustration</span></div></div><div class="skill-group"><h3>TOOLS &amp; TECHNOLOGY</h3><div class="skills-cloud"><span class="skill" tabindex="0">Fusion 360</span><span class="skill" tabindex="0">Figma</span><span class="skill" tabindex="0">Illustrator</span><span class="skill" tabindex="0">Photoshop</span><span class="skill" tabindex="0">Python</span><span class="skill" tabindex="0">p5.js</span></div></div><div class="skill-group"><h3>COMMUNICATION &amp; LANGUAGES</h3><div class="skills-cloud"><span class="skill" tabindex="0">Mandarin · Native</span><span class="skill" tabindex="0">English · Professional</span><span class="skill" tabindex="0">German · Basic</span><span class="skill" tabindex="0">Cross-cultural Communication</span></div></div><div class="skill-group"><h3>BUSINESS &amp; COLLABORATION</h3><div class="skills-cloud"><span class="skill" tabindex="0">Marketing &amp; Social Media</span><span class="skill" tabindex="0">Project Coordination</span><span class="skill" tabindex="0">Event Management</span><span class="skill" tabindex="0">Team Collaboration</span></div></div></div></div></section></main>
